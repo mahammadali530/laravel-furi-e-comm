@@ -18,6 +18,8 @@ use App\Http\Controllers\forntenddController;
 use App\Http\Controllers\ordersController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\messgeController;
+use App\Http\Controllers\CartController;
+
 use App\Http\Controllers\customermsegeController;
 
 use App\Http\Middleware\RedirectIfAuthenticatedAndNotLoggedIn;
@@ -94,7 +96,9 @@ Route::view('/Register','frontend.partials.Register');
  
  Route::post('/add_to_cart', [FrontendController::class, 'addToCart'])->name('add_to_cart');
  Route::get('/cart', [FrontendController::class, 'cartlist']);
+ Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
  Route::get('/removecart/{id}', [FrontendController::class, 'removeCart'])->name('remove.cart');
+ 
  Route::post('/checkout', [FrontendController::class, 'orderplace'])->name('checkout');
  Route::post('/contact', [messgeController::class, 'messge']);
 

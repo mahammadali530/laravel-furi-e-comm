@@ -67,15 +67,15 @@ $total= FrontendController::cartitems();
 		                <label for="c_fname" class="text-black">First Name <span class="text-danger">*</span></label>
 		                <input type="text" class="form-control" id="c_fname" name="c_fname">
 						@error('c_fname')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
-		              </div>
+					<small class="text-danger">{{ $message }}</small>
+					@enderror
+						</div>
 		              <div class="col-md-6">
 		                <label for="c_lname" class="text-black">Last Name <span class="text-danger">*</span></label>
 		                <input type="text" class="form-control" id="c_lname" name="c_lname">
 						@error('c_lname')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
 		              </div>
 		            </div>
 
@@ -84,8 +84,8 @@ $total= FrontendController::cartitems();
 		                <label for="c_companyname" class="text-black">Company Name </label>
 		                <input type="text" class="form-control" id="c_companyname" name="c_companyname">
 						@error('c_companyname')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
 		              </div>
 		            </div>
 
@@ -94,8 +94,8 @@ $total= FrontendController::cartitems();
 		                <label for="c_address" class="text-black">Address <span class="text-danger">*</span></label>
 		                <input type="text" class="form-control" id="c_address" name="c_address" placeholder="Street address">
 						@error('c_address')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
 		              </div>
 		            </div>
 
@@ -104,15 +104,15 @@ $total= FrontendController::cartitems();
 		                <label for="c_state_country" class="text-black">State / Country <span class="text-danger">*</span></label>
 		                <input type="text" class="form-control" id="c_state_country" name="c_state_country">
 						@error('c_state_country')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
 		              </div>
 		              <div class="col-md-6">
 		                <label for="c_postal_zip" class="text-black">Posta / Zip <span class="text-danger">*</span></label>
 		                <input type="text" class="form-control" id="c_postal_zip" name="c_postal_zip">
 						@error('c_postal_zip')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
 		              </div>
 		            </div>
 
@@ -121,15 +121,15 @@ $total= FrontendController::cartitems();
 		                <label for="c_email_address" class="text-black">Email Address <span class="text-danger">*</span></label>
 		                <input type="text" class="form-control" id="c_email_address" name="c_email_address">
 						@error('c_email_address')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
 		              </div>
 		              <div class="col-md-6">
 		                <label for="c_phone" class="text-black">Phone <span class="text-danger">*</span></label>
 		                <input type="text" class="form-control" id="c_phone" name="c_phone" placeholder="Phone Number">
 						@error('c_phone')
-        <small class="text-danger">{{ $message }}</small>
-        @enderror
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
 		              </div>
 		            </div>
 

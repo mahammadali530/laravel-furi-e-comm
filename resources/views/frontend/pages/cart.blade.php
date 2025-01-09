@@ -1,6 +1,6 @@
 <?php
 use App\Http\Controllers\FrontendController;
-$total = 0;
+//$total = 0;
 if (Session::has('user')) {
 $total= FrontendController::cartitems();
 }
@@ -37,25 +37,42 @@ $total= FrontendController::cartitems();
                           <th class="product-thumbnail">Image</th>
                           <th class="product-name">Product</th>
                           <th class="product-price">Price</th>
+                          <th class="product-quantity">Quantity</th>
+                          <th class="product-total">Total</th>
                           <th class="product-remove">Remove</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
+                       <?php $grandTotal = 0; ?>
                         @foreach ( $products as $items )
+                        <tr data-price="{{ $items->price }}" data-id="{{ $items->cart_id }}">
                           <td class="product-thumbnail">
                             <img src="{{ asset('storage/' . $items->image_1) }}" alt="Image" class="img-fluid">
                           </td>
                           <td class="product-name">
                             <h2 class="h5 text-black">{{$items->f_name}}</h2>
                           </td>
-                          <td>₹{{$items->price}}</td>
+                          <td>₹<span class="product-price">{{ $items->price }}</span></td>
+                          <td>
+                            <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
+                              <div class="input-group-prepend">
+                                <button class="btn btn-outline-black decrease" type="button">&minus;</button>
+                              </div>
+                              <input type="text" class="form-control text-center quantity-amount" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-black increase" type="button">&plus;</button>
+                              </div>
+                            </div>
+        
+                          </td>
+                           <td>₹<span class="item-total">{{ $items->price }}</span></td>
                           <td><a href="{{ route('remove.cart', $items->cart_id) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">X</a>
                           </td>
                         </tr>
                         <?php
                        
-                        $total += $items->price; ?>
+                       $grandTotal += $items->price; ?>
                         @endforeach
                         
         
@@ -133,7 +150,7 @@ $total= FrontendController::cartitems();
                           <span class="text-black">Total Price</span>
                         </div>
                         <div class="col-md-6 text-right">
-                          <strong class="text-black">{{ $total }}</strong>
+                          <strong class="text-black">₹<span id="grand-total">{{ $grandTotal }}</span></strong>
                         </div>
                       </div>
         
@@ -149,4 +166,62 @@ $total= FrontendController::cartitems();
               </div>
             </div>
           </div>
+          <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.querySelector('.site-blocks-table');
+        const grandTotalElement = document.getElementById('grand-total');
+
+        // Update the total for a product row
+        function updateRowTotal(row) {
+            const price = parseFloat(row.dataset.price);
+            const quantity = parseInt(row.querySelector('.quantity-amount').value);
+            const total = price * quantity;
+
+            row.querySelector('.item-total').textContent = total.toFixed(2);
+            updateGrandTotal();
+        }
+
+        // Update the grand total
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const rowTotal = parseFloat(row.querySelector('.item-total').textContent);
+                grandTotal += rowTotal;
+            });
+            grandTotalElement.textContent = grandTotal.toFixed(2);
+        }
+
+        // Event listeners for quantity buttons
+        table.addEventListener('click', function (event) {
+            if (event.target.matches('.increase, .decrease')) {
+                const row = event.target.closest('tr');
+                const quantityInput = row.querySelector('.quantity-amount');
+                let quantity = parseInt(quantityInput.value);
+
+                if (event.target.matches('.increase')) {
+                    quantity++;
+                } else if (event.target.matches('.decrease') && quantity > 1) {
+                    quantity--;
+                }
+
+                quantityInput.value = quantity;
+                updateRowTotal(row);
+            }
+        });
+
+        // Event listener for direct quantity input change
+        table.addEventListener('input', function (event) {
+            if (event.target.matches('.quantity-amount')) {
+                const row = event.target.closest('tr');
+                updateRowTotal(row);
+            }
+        });
+    });
+
+
+
+
+
+    
+</script>
           @include('frontend.partials.footer')
