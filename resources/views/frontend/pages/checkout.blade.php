@@ -45,18 +45,7 @@ $total= FrontendController::cartitems();
 		          <h2 class="h3 mb-3 text-black">Billing Details</h2>
 		          <div class="p-3 p-lg-5 border bg-white">
 		            <div class="form-group">
-		              <!-- <label for="c_country" class="text-black">Country <span class="text-danger">*</span></label>
-		              <select id="c_country" class="form-control">
-		                <option value="1">Select a country</option>    
-		                <option value="2">bangladesh</option>    
-		                <option value="3">Algeria</option>    
-		                <option value="4">Afghanistan</option>    
-		                <option value="5">Ghana</option>    
-		                <option value="6">Albania</option>    
-		                <option value="7">Bahrain</option>    
-		                <option value="8">Colombia</option>    
-		                <option value="9">Dominican Republic</option>    
-		              </select> -->
+		             
 		            </div>
 				
 					<form action="{{ route('checkout') }}" method="post">
@@ -131,11 +120,15 @@ $total= FrontendController::cartitems();
 						<small class="text-danger">{{ $message }}</small>
 						@enderror
 		              </div>
+					  <!-- <div class="col-md-12">
+		                <label for="quantity" class="text-black">Quantity <span class="text-danger">*</span></label>
+		                <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Street Quantity">
+						@error('quantity')
+						<small class="text-danger">{{ $message }}</small>
+						@enderror
+		              </div> -->
 		            </div>
-
-		            <!--  -->
-
-
+					
 		       
 		          </div>
 		        </div>
@@ -143,64 +136,41 @@ $total= FrontendController::cartitems();
 
 		        
 
-		          <div class="row mb-5">
-		            <div class="col-md-12">
-		              <h2 class="h3 mb-3 text-black">Your Order</h2>
-		              <div class="p-3 p-lg-5 border bg-white">
-		                <table class="table site-block-order-table mb-5">
-		                
-		                  <tbody>
-		                   
-		                    <tr>
-		                      <td class="text-black font-weight-bold"><strong> Total Product</strong></td>
-		                      <td class="text-black font-weight-bold"><strong>{{ $total }}</strong></td>
-		                    </tr>
-		                  </tbody>
-		                </table>
+			<div class="row mb-5">
+			<div class="col-md-12">
+				<h2 class="h3 mb-3 text-black">Your Order</h2>
+				<div class="p-3 p-lg-5 border bg-white">
+				<table class="table site-block-order-table mb-5">
+				
+					<tbody>
+					
+					<tr>
+						<td class="text-black font-weight-bold"><strong> Total Product</strong></td>
+						<td class="text-black font-weight-bold"><strong>{{ $total }}</strong></td>
+					</tr>
+					</tbody>
+				</table>
 
-		                <!-- <div class="border p-3 mb-3">
-		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsebank" role="button" aria-expanded="false" aria-controls="collapsebank">Direct Bank Transfer</a></h3>
+		               
 
-		                  <div class="collapse" id="collapsebank">
-		                    <div class="py-2">
-		                      <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
-		                    </div>
-		                  </div>
-		                </div> -->
+			<div class="border p-3 mb-3">
+				<h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsecheque" role="button" aria-expanded="false" aria-controls="collapsecheque">Cash Payment</a></h3>
 
-		                <div class="border p-3 mb-3">
-		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsecheque" role="button" aria-expanded="false" aria-controls="collapsecheque">Cash Payment</a></h3>
-
-		                  <div class="collapse" id="collapsecheque">
-		                    <div class="py-2">
-							<input type="radio" value="cash" name="payment"  ><span>cash on delivery</span><br><br> </div>
-		                  </div>
-		                </div>
-
-		                <!-- <div class="border p-3 mb-5">
-		                  <h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsepaypal" role="button" aria-expanded="false" aria-controls="collapsepaypal">Paypal</a></h3>
-
-		                  <div class="collapse" id="collapsepaypal">
-		                    <div class="py-2">
-		                      <p class="mb-0">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</p>
-		                    </div>
-		                  </div>
-		                </div> -->
-
-		                
-		                  <!-- <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='thankyou.html'">Place Order</button> -->
-						  <!-- <a class="btn btn-black btn-lg py-3 btn-block" href="">Place Order</a> -->
-		                
-                     <button class="btn btn-black btn-lg py-3 btn-block">submit</button>
-		              </div>
-					 
-		            </div>
-		          </div>
-				  
-		        </div>
-				</form>
-		      </div>
-		      <!-- </form> -->
-		    </div>
-		  </div>
-          @include('frontend.partials.footer')
+				<div class="collapse" id="collapsecheque">
+				<div class="py-2">
+				<input type="radio" value="cash" name="payment"  ><span>cash on delivery</span><br><br> </div>
+				</div>
+			</div>         
+				<button class="btn btn-black btn-lg py-3 btn-block">submit</button>
+				</div>
+				
+			</div>
+			</div>
+			
+		</div>
+		</form>
+	</div>
+		<!-- </form> -->
+	</div>
+</div>
+		@include('frontend.partials.footer')

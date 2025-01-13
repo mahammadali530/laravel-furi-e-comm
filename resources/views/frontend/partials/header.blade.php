@@ -11,7 +11,7 @@ $total= FrontendController::cartitems();
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 <link href="{{ asset('asset/css/tiny-slider.css') }}" rel="stylesheet">
-<link href="{{ asset('resources/css/styles.css') }}" rel="stylesheet">
+<!-- <link href="{{ asset('resources/css/styles.css') }}" rel="stylesheet"> -->
 <link href="{{ asset('asset/scss/style.scss') }}" rel="stylesheet">
 
 <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
@@ -25,10 +25,10 @@ $total= FrontendController::cartitems();
 
 				<div class="collapse navbar-collapse" id="navbarsFurni">
 					<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-						<li class="nav-item active">
-							<a class="nav-link" href="{{ url('/') }}">Home</a>
+						<li class="nav-item">
+							<a class="nav-link " href="{{ url('/') }}">Home</a>
 						</li>
-						<li><a class="nav-link" href="{{ url('/shop') }}">Shop</a></li>
+						<li><a class="nav-link " href="{{ url('/shop') }}">Shop</a></li>
 						<li><a class="nav-link" href="{{ url('/about') }}">About us</a></li>
 						<li><a class="nav-link" href="{{ url('/services') }}">Services</a></li>
 						<li><a class="nav-link" href="{{ url('/blog') }}">Blog</a></li>

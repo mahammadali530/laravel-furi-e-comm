@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-//use App\Http\Controllers\UserController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\iconController;
@@ -19,7 +18,6 @@ use App\Http\Controllers\ordersController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\messgeController;
 use App\Http\Controllers\CartController;
-
 use App\Http\Controllers\customermsegeController;
 
 use App\Http\Middleware\RedirectIfAuthenticatedAndNotLoggedIn;
@@ -43,21 +41,15 @@ Route::middleware([RedirectIfAuthenticatedAndNotLoggedIn::class])->group(functio
     });
     Route::get('/aboutt', function () {
         return view('aboutt');
-    });
-    
-   
+    });   
 });
-// Route::get('/login', [FrontendController::class, 'index']);
-//  Route::post('/login', [FrontendController::class, 'index']);
+
  Route::get('/login', function () {
     return view('frontend.partials.login');
 });
 Route::get('/blog', function () {
     return view('frontend.pages.blog');
 });
-// Route::get('/', function () {
-//     return view('frontend.pages.home');
-// });
 Route::get('/about', function () {
     return view('frontend.pages.about');
 });
@@ -84,7 +76,6 @@ Route::view('/Register','frontend.partials.Register');
  Route::post("/Register", [loginController::class, 'Register']);
  Route::get('/', [FrontendController::class, 'Homepage']);
  Route::get("/shop", [FrontendController::class, 'indexpage']);
- //Route::get("/", [FrontendController::class, 'about4'])->name('about4');
  Route::get('/about', [FrontendController::class, 'aboutPage']);
  Route::get('/services', [FrontendController::class, 'servicepage']);
  Route::get('/blog', [FrontendController::class, 'blogpage']);
@@ -96,7 +87,12 @@ Route::view('/Register','frontend.partials.Register');
  
  Route::post('/add_to_cart', [FrontendController::class, 'addToCart'])->name('add_to_cart');
  Route::get('/cart', [FrontendController::class, 'cartlist']);
- Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+ 
+ // In routes/web.php
+ Route::post('/update-increase', [CartController::class, 'increase'])->name('update.increase');
+ Route::post('/update-decrease', [CartController::class, 'decrease'])->name('update.decrease');
+
+ 
  Route::get('/removecart/{id}', [FrontendController::class, 'removeCart'])->name('remove.cart');
  
  Route::post('/checkout', [FrontendController::class, 'orderplace'])->name('checkout');
@@ -107,19 +103,11 @@ Route::view('/Register','frontend.partials.Register');
 
 
 
-//Route::get('/', [FrontendController::class, 'home']);
-//Route::post('/add_to_cart', [FrontendController::class, 'addToCart']);
-// Route::get('/cartlist', [FrontendController::class, 'cartlist']);
-//Route::get('/removecart/{id}', [FrontendController::class, 'removeCart']);
+
 
 Route::get('/ordernow', [FrontendController::class, 'ordernow']);
-//Route::post('/orderplace', [FrontendController::class, 'orderplace']);
 Route::get('/myorders', [FrontendController::class, 'myorders']);
 
-
-// Route::get('/order-form/{product_id}', [FrontendController::class, 'showOrderForm']);
-
-// Route::get('/master', [UsersController::class, 'master']);
 
 // register
 

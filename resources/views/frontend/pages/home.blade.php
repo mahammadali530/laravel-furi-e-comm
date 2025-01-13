@@ -260,21 +260,11 @@
 								</div>
 							</div>
 						</div>
-						
 					</div>
-					@endforeach
-</div>
-</div>
-</div>
-					
-		<!-- End Blog Section -->	
-
-		<!-- Start Footer Section -->
-		<!--  -->
-		<!-- End Footer Section -->	
-
-
-		@include('frontend.partials.footer')
+				@endforeach
+            </div>
+      </div>
+</div>	
+	@include('frontend.partials.footer')
 	</body>
-
 </html>

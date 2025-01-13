@@ -38,13 +38,21 @@ $total= FrontendController::cartitems();
                           <th class="product-name">Product</th>
                           <th class="product-price">Price</th>
                           <th class="product-quantity">Quantity</th>
-                          <th class="product-total">Total</th>
+                          <!-- <th class="product-total">Total</th> -->
                           <th class="product-remove">Remove</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                       <?php $grandTotal = 0; ?>
+                          
+                       <?php $grandTotal = []; 
+                       
+                       ?>
+                       @if ($products->isEmpty())
+                       <tr>
+                          <td colspan="5" class="text-center"></td>
+                      </tr>
+                       @else
                         @foreach ( $products as $items )
                         <tr data-price="{{ $items->price }}" data-id="{{ $items->cart_id }}">
                           <td class="product-thumbnail">
@@ -53,27 +61,30 @@ $total= FrontendController::cartitems();
                           <td class="product-name">
                             <h2 class="h5 text-black">{{$items->f_name}}</h2>
                           </td>
-                          <td>₹<span class="product-price">{{ $items->price }}</span></td>
+                         
+                          <td>₹<span class="product-price">{{ $grandTotal[] = $items->total_price }}</span></td>
+                         
                           <td>
                             <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-                              <div class="input-group-prepend">
-                                <button class="btn btn-outline-black decrease" type="button">&minus;</button>
-                              </div>
-                              <input type="text" class="form-control text-center quantity-amount" value="1" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                              <div class="input-group-append">
-                                <button class="btn btn-outline-black increase" type="button">&plus;</button>
-                              </div>
+                            <div class="input-group">
+                                <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $items->cart_id }}" onclick="decrease({{$items->cart_id}})">&minus;</button>
+                                <input type="text" class="form-control text-center quantity-amount" 
+                                      data-cart-id="{{ $items->cart_id }}" 
+                                      value="{{ $items->quantity }}" />
+                                <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $items->cart_id }}" onclick="increase({{$items->cart_id}})">&plus;</button>
+                            </div>
                             </div>
         
                           </td>
-                           <td>₹<span class="item-total">{{ $items->price }}</span></td>
+                          
+                           <!-- <td>₹<span class="item-total">{{ $items->price }}</span></td> -->
                           <td><a href="{{ route('remove.cart', $items->cart_id) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">X</a>
                           </td>
                         </tr>
                         <?php
-                       
-                       $grandTotal += $items->price; ?>
+                       ?>
                         @endforeach
+                        @endif
                         
         
                         <!-- <tr>
@@ -109,7 +120,7 @@ $total= FrontendController::cartitems();
                 <div class="col-md-6">
                   <div class="row mb-5">
                     <div class="col-md-6 mb-3 mb-md-0">
-                      <button class="btn btn-black btn-sm btn-block">Update Cart</button>
+                    
                     </div>
                     <div class="col-md-6">
                       <!-- <button class="btn btn-outline-black btn-sm btn-block">Continue Shopping</button> -->
@@ -150,7 +161,7 @@ $total= FrontendController::cartitems();
                           <span class="text-black">Total Price</span>
                         </div>
                         <div class="col-md-6 text-right">
-                          <strong class="text-black">₹<span id="grand-total">{{ $grandTotal }}</span></strong>
+                        <strong class="text-black">₹<span id="grand-total">{{ array_sum($grandTotal)  }}</span></strong>
                         </div>
                       </div>
         
@@ -166,62 +177,73 @@ $total= FrontendController::cartitems();
               </div>
             </div>
           </div>
+
+          
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
           <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const table = document.querySelector('.site-blocks-table');
-        const grandTotalElement = document.getElementById('grand-total');
-
-        // Update the total for a product row
-        function updateRowTotal(row) {
-            const price = parseFloat(row.dataset.price);
-            const quantity = parseInt(row.querySelector('.quantity-amount').value);
-            const total = price * quantity;
-
-            row.querySelector('.item-total').textContent = total.toFixed(2);
-            updateGrandTotal();
-        }
-
-        // Update the grand total
-        function updateGrandTotal() {
-            let grandTotal = 0;
-            table.querySelectorAll('tbody tr').forEach(row => {
-                const rowTotal = parseFloat(row.querySelector('.item-total').textContent);
-                grandTotal += rowTotal;
-            });
-            grandTotalElement.textContent = grandTotal.toFixed(2);
-        }
-
-        // Event listeners for quantity buttons
-        table.addEventListener('click', function (event) {
-            if (event.target.matches('.increase, .decrease')) {
-                const row = event.target.closest('tr');
-                const quantityInput = row.querySelector('.quantity-amount');
-                let quantity = parseInt(quantityInput.value);
-
-                if (event.target.matches('.increase')) {
-                    quantity++;
-                } else if (event.target.matches('.decrease') && quantity > 1) {
-                    quantity--;
-                }
-
-                quantityInput.value = quantity;
-                updateRowTotal(row);
-            }
-        });
-
-        // Event listener for direct quantity input change
-        table.addEventListener('input', function (event) {
-            if (event.target.matches('.quantity-amount')) {
-                const row = event.target.closest('tr');
-                updateRowTotal(row);
-            }
-        });
-    });
-
-
-
-
-
+ $(document).ready(function () {
     
+  });
+    function increase(cart_id){
+        let input = $(this).siblings('.quantity-amount');
+        let currentVal = parseInt(input.val()) || 0;
+        input.val(currentVal + 1);
+        $.ajax({
+            url: '{{ route("update.increase") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                cart_id: cart_id,
+            },
+            beforeSend: function () {
+                // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
+            },
+            success: function (response) {
+                console.log('Response received:', response);
+                if (response.status === 'success') {
+                    alert('Cart updated successfully!');
+                    location.reload();
+                } else {
+                    alert('Failed to update cart. Message: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', { xhr, status, error });
+                alert('An error occurred. Please try again.');
+            }
+        });
+    }
+
+    function decrease(cart_id){
+      let input = $(this).siblings('.quantity-amount');
+        let currentVal = parseInt(input.val()) || 0;
+        if (currentVal > 1) input.val(currentVal - 1);
+        $.ajax({
+            url: '{{ route("update.decrease") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                cart_id: cart_id,
+            },
+            beforeSend: function () {
+                // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
+            },
+            success: function (response) {
+                console.log('Response received:', response);
+                if (response.status === 'success') {
+                    alert('Cart updated successfully!');
+                    location.reload();
+                } else {
+                    alert('Failed to update cart. Message: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', { xhr, status, error });
+                alert('An error occurred. Please try again.');
+            }
+        });
+    }
 </script>
+
           @include('frontend.partials.footer')

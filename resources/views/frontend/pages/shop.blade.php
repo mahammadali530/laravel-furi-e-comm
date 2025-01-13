@@ -28,12 +28,32 @@
 							<img src="{{ asset('storage/' . $items->image_1) }}" class="img-fluid product-thumbnail">
 								<h3 class="product-title">{{$items['f_name']}}</h3>
 								<strong class="product-price">₹{{$items['price']}}</strong><br><br>
-								<form action="{{ route('add_to_cart') }}" method="post">
-									@csrf
-									<input type="hidden" name="product_id" value="{{$items['u_id']}}">
-									<button class="btn btn-primary">Add To Cart</button>
-								</form>
-								<br>
+
+								@if ($userCart = App\Models\Cart::where('product_id', $items->u_id)->first())
+
+							<div class="input-group">
+								<button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $userCart->id }}" onclick="decrease({{ $userCart->id }})">&minus;</button>
+								<input type="text" class="form-control text-center quantity-amount" 
+									data-cart-id="{{ $userCart->id }}" 
+									value="{{ $userCart->quantity }}" />
+								<button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $userCart->id }}" onclick="increase({{ $userCart->id }})">&plus;</button>
+							</div>
+                           @else
+							<form action="{{ route('add_to_cart') }}" method="post">
+								@csrf
+								<input type="hidden" name="product_id" value="{{$items['u_id']}}">
+								<div>
+									<label for="quantity">Select Quantity:</label>
+									<select name="quantity" id="quantity" required>
+										@for ($i = 1; $i <= 10; $i++) 
+											<option value="{{ $i }}">{{ $i }}</option>
+										@endfor
+									</select>
+                                  </div><br>
+								<button class="btn btn-primary">Add To Cart</button>
+							</form>
+							@endif
+							<br>
                        </div>
 		           </div>
 				   @endforeach
@@ -141,6 +161,73 @@
 						</a>
 					</div> -->
 					<!-- End Column 4 -->
+ 
+					<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+});
+function increase(cart_id){
+let input = $(this).siblings('.quantity-amount');
+let currentVal = parseInt(input.val()) || 0;
+input.val(currentVal + 1);
+$.ajax({
+  url: '{{ route("update.increase") }}',
+  type: 'POST',
+  data: {
+	  _token: '{{ csrf_token() }}',
+	  cart_id: cart_id,
+  },
+  beforeSend: function () {
+	  // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
+  },
+  success: function (response) {
+	  console.log('Response received:', response);
+	  if (response.status === 'success') {
+		  alert('Cart updated successfully!');
+		  location.reload();
+	  } else {
+		  alert('Failed to update cart. Message: ' + response.message);
+	  }
+  },
+  error: function (xhr, status, error) {
+	  console.error('AJAX Error:', { xhr, status, error });
+	  alert('An error occurred. Please try again.');
+  }
+});
+}
+
+function decrease(cart_id){
+let input = $(this).siblings('.quantity-amount');
+let currentVal = parseInt(input.val()) || 0;
+if (currentVal > 1) input.val(currentVal - 1);
+$.ajax({
+  url: '{{ route("update.decrease") }}',
+  type: 'POST',
+  data: {
+	  _token: '{{ csrf_token() }}',
+	  cart_id: cart_id,
+  },
+  beforeSend: function () {
+	  // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
+  },
+  success: function (response) {
+	  console.log('Response received:', response);
+	  if (response.status === 'success') {
+		  alert('Cart updated successfully!');
+		  location.reload();
+	  } else {
+		  alert('Failed to update cart. Message: ' + response.message);
+	  }
+  },
+  error: function (xhr, status, error) {
+	  console.error('AJAX Error:', { xhr, status, error });
+	  alert('An error occurred. Please try again.');
+  }
+});
+}
+</script>
 
 		      
         @include('frontend.partials.footer')

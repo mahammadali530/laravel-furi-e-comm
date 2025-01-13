@@ -15,16 +15,19 @@
    
       <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="row w-50">
+
     @error('email')
      <!-- <div class="text-danger">{{ $message }}</div>  -->
     <div class="alert alert-danger" role="alert">
-      {{ $message }}
+          {{ $message }}
     </div>
-@enderror
+    @enderror
+
     @error('password')
     <div class="alert alert-danger" role="alert">
-      {{ $message }}
+           {{ $message }}
       @enderror
+      
         <form action="login" method="post" class="w-100">
             @csrf
             <div class="mb-3">

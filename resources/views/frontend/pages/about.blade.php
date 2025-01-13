@@ -105,9 +105,9 @@
 					<div class="col-12 col-md-6 col-lg-3 mb-5 mb-md-0">
 						<img src="{{ asset('storage/' . $items->image) }}" class="img-fluid mb-5">
 						<h3 clas>{{$items['title']}}</h3>
-            <span class="d-block position mb-4">CEO, Founder, Atty.</span>
-            <p>{{$items['description']}} </p>
-            <p class="mb-0"><a href="#" class="more dark">Learn More <span class="icon-arrow_forward"></span></a></p>
+						<span class="d-block position mb-4">CEO, Founder, Atty.</span>
+						<p>{{$items['description']}} </p>
+						<p class="mb-0"><a href="#" class="more dark">Learn More <span class="icon-arrow_forward"></span></a></p>
 					</div> 
 					@endforeach
                    </div>

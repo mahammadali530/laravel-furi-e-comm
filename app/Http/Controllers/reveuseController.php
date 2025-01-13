@@ -10,7 +10,7 @@ class reveuseController extends Controller
 {
     public function reveuse(Request $request)
     {      
-            $imagePath = $request->file('image')->store('uploads_9', 'public');
+        $imagePath = $request->file('image')->store('uploads_9', 'public');
             
         $items = new reveuse();
         $items->title = $request->title;

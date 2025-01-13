@@ -10,10 +10,8 @@ class iconController extends Controller
 {
     public function icon(Request $request)
     {
-        // $imagePath = null;
-        // if ($request->hasFile('image') && $request->file('image_1')->isValid()) {
-            
-            $imagePath = $request->file('image_1')->store('uploads', 'public');
+        
+        $imagePath = $request->file('image_1')->store('uploads', 'public');
 
         
         $items = new icon();

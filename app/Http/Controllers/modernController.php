@@ -10,9 +10,9 @@ class modernController extends Controller
 {
     public function modern(Request $request)
     {      
-            $imagePath1 = $request->file('image')->store('uploads_8', 'public');
-            $imagePath2 = $request->file('image_1')->store('uploads_8', 'public');
-            $imagePath3 = $request->file('image_2')->store('uploads_8', 'public');
+        $imagePath1 = $request->file('image')->store('uploads_8', 'public');
+        $imagePath2 = $request->file('image_1')->store('uploads_8', 'public');
+        $imagePath3 = $request->file('image_2')->store('uploads_8', 'public');
             
         $items = new modern();
         $items->title = $request->title;

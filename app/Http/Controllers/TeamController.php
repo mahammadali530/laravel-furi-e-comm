@@ -10,7 +10,7 @@ class TeamController extends Controller
 {
     public function team(Request $request)
     {      
-            $imagePath = $request->file('image')->store('uploads_2', 'public');
+         $imagePath = $request->file('image')->store('uploads_2', 'public');
             
         $items = new Team();
         $items->title = $request->title;

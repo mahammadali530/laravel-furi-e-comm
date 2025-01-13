@@ -112,11 +112,20 @@ class FrontendController extends Controller
     function addToCart(Request $requeste){
         if($requeste->session()->has('user'))
         {
-       
-        $cart= new cart;
-        $cart->user_id=$requeste->session()->get('user')['id'];
-        $cart->product_id = $requeste->input('product_id');
-       
+            $product = icon::find($requeste->input('product_id'));
+
+        if ($product) {
+           
+            $quantity = $requeste->input('quantity');
+            $totalPrice = $product->price * $quantity;
+          
+            $cart = new Cart;
+            $cart->user_id = $requeste->session()->get('user')['id'];
+            $cart->product_id = $requeste->input('product_id');
+            $cart->quantity = $quantity;
+            $cart->total_price = $totalPrice; 
+
+        }
         $cart->save();
         
        return redirect('/shop');
@@ -138,8 +147,13 @@ class FrontendController extends Controller
        $products= DB::table('cart')
        ->join('products','cart.product_id','=','products.u_id')
        ->where('cart.user_id',$userId)
-       ->select('products.*','cart.id as cart_id')
-       ->get();
+       ->select(
+        'products.*',
+        'cart.id as cart_id',
+        'cart.quantity',
+        DB::raw('products.price * cart.quantity as total_price') // Calculate total price
+    )
+    ->get();
        return view('frontend.pages.cart',['products'=>$products]);
     }
 
@@ -170,6 +184,7 @@ class FrontendController extends Controller
             'c_postal_zip' => 'required|numeric',
             'c_email_address' => 'required|email',
             'c_phone' => 'required|digits_between:10,15',
+           // 'quantity' => 'required|quantity',
         ], [
             'payment.required' => 'Payment method is required.',
             'c_fname.required' => 'First name is required.',
@@ -182,6 +197,7 @@ class FrontendController extends Controller
             'c_email_address.email' => 'Please provide a valid email address.',
             'c_phone.required' => 'Phone number is required.',
             'c_phone.digits_between' => 'Phone number must be between 10 and 15 digits.',
+          //  'quantity.required' => 'quantity is required.',
         ]);
         
 
@@ -192,8 +208,9 @@ class FrontendController extends Controller
         $order=new order;
         $order->product_id= $request['product_id'];
         $order->user_id= $request['user_id']; 
+        $order->quantity = $request['quantity'];
        
-        
+
         $order->payment_method = $requests->payment;
         $order->c_fname = $requests->c_fname;
         $order->c_lname = $requests->c_lname;
@@ -204,8 +221,6 @@ class FrontendController extends Controller
         $order->c_email_address = $requests->c_email_address;
         $order->c_phone = $requests->c_phone;
       
-        //$order->save();
-       
         cart::where('user_id',$userId)->delete();
 
         } 
@@ -214,7 +229,7 @@ class FrontendController extends Controller
            
             return redirect()->back()->with('success', 'Product Add  successfully!');
         }
-       // return redirect('/');
+       
     }
     function myorders(){
         $userId=Session::get('user')['id'];
@@ -224,9 +239,6 @@ class FrontendController extends Controller
         ->where('orders.user_id', $userId)
         ->get();
       
-    //    $orders=  DB::table('orders')
-       
-        //->get(); 
         return view('Customer',['orders'=>$orders]);
      
     }

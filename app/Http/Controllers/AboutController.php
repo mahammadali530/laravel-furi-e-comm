@@ -51,28 +51,28 @@ class AboutController extends Controller
             }
 
 
-            public function editabout(Request $request, $id)
-            {
-            $student = About::find($id);
-            if ($student) {
-                $student->title = $request->title;
-                $student->description = $request->description;
-                $student->description_1 = $request->description_1;
-                $student->description_2 = $request->description_2;
-                $student->description_3 = $request->description_3;
-                $student->description_4 = $request->description_4;
+                    public function editabout(Request $request, $id)
+                    {
+                    $student = About::find($id);
+                    if ($student) {
+                        $student->title = $request->title;
+                        $student->description = $request->description;
+                        $student->description_1 = $request->description_1;
+                        $student->description_2 = $request->description_2;
+                        $student->description_3 = $request->description_3;
+                        $student->description_4 = $request->description_4;
 
-                if ($request->hasFile('image')) {
-                    if ($student->image && file_exists(storage_path('app/public/' . $student->image))) {
-                        unlink(storage_path('app/public/' . $student->image));
+                        if ($request->hasFile('image')) {
+                            if ($student->image && file_exists(storage_path('app/public/' . $student->image))) {
+                                unlink(storage_path('app/public/' . $student->image));
+                            }
+                            $path = $request->file('image')->store('images', 'public');
+                            $student->image = $path;
+                        }
+                        if ($student->save()) {
+                            return response()->json(['success' => true, 'message' => 'Student updated successfully']);
+                        }
                     }
-                    $path = $request->file('image')->store('images', 'public');
-                    $student->image = $path;
+                    return response()->json(['success' => false, 'message' => 'Failed to update student']);
                 }
-                if ($student->save()) {
-                    return response()->json(['success' => true, 'message' => 'Student updated successfully']);
-                }
-            }
-            return response()->json(['success' => false, 'message' => 'Failed to update student']);
-        }
 }
