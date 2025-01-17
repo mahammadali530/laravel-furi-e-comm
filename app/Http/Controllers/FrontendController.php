@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Session;
 class FrontendController extends Controller
 {
     
-    public function indexpage(){
-    
+    public function indexpage(Request $request){
+        $cart = $request->session()->get('cart', []);
         $productsData = icon::all();
         $footerData = footer::all();  
 
@@ -109,70 +109,156 @@ class FrontendController extends Controller
         ]);
     }
     
-    function addToCart(Request $requeste){
-        if($requeste->session()->has('user'))
-        {
-            $product = icon::find($requeste->input('product_id'));
-
-        if ($product) {
-           
-            $quantity = $requeste->input('quantity');
-            $totalPrice = $product->price * $quantity;
-          
-            $cart = new Cart;
-            $cart->user_id = $requeste->session()->get('user')['id'];
-            $cart->product_id = $requeste->input('product_id');
-            $cart->quantity = $quantity;
-            $cart->total_price = $totalPrice; 
-
-        }
+   
+    public function addToCart(Request $request)
+    {
+        if ($request->session()->has('user')) {
+            
+            $productId = $request->input('product_id');
+            $quantity = $request->input('quantity');
+    
+            
+            $product = icon::find($productId);
+    
+            
+            if ($product) {
+                $quantity = $request->input('quantity');
+        $totalPrice = $product->price * $quantity;
+                
+        $cart = new cart;
+        $cart->user_id = $request->session()->get('user')['id'];
+        $cart->product_id = $request->input('product_id');
+        $cart->quantity = $quantity;
+        $cart->f_name = $product->f_name;
+        $cart->price = $product->price;
+        $cart->total_price = $totalPrice;
+        $cart->image_1 =$product->image_1;
+       
         $cart->save();
-        
-       return redirect('/shop');
-        
+                
+                return redirect('/cart')->with('success', 'Product added to your cart.');
+            } else {
+                
+                return redirect('/shop')->with('error', 'Product not found.');
+            }
+        } else {
+            
+            $productId = $request->input('product_id');
+            $quantity = $request->input('quantity');
+    
+            
+            $product = icon::find($productId);
+            $cart = $request->session()->get('cart', []);
+            if($cart){
+                $lastItem = end($cart);
+                    $id = $lastItem['id'] + 1;
+            } else {
+                $id = 0;
+            }
+            if ($product) {
+                $cartItem = [
+                'id' => $id,
+                'product_id' => $productId,
+                'f_name' => $product->f_name,
+                'price' => $product->price,
+                'quantity' => $quantity,
+                'total_price' => $product->price * $quantity,
+                'image_1' => $product->image_1,
+                ];
+    
+               
+                $cart[] = $cartItem;
+                
+                $request->session()->put('cart', $cart);
+                
+                $cart = $request->session()->get('cart', []);
+              
+                return redirect('/cart')->with('success', 'Product added to your session cart.');
+            } else {
+                
+                return redirect('/shop')->with('error', 'Product not found.');
+            }
+        }
     }
-    else{
-        return redirect('/login');
+    
+    
+    public static function cartitems(Request $request = null)
+    {
+       
+        $request = $request ?? request(); 
+    
+        if ($request->session()->has('user')) {
+            $userId = $request->session()->get('user')['id'];
+            return cart::where('user_id', $userId)->count();
+        } else {
+            $cart = $request->session()->get('cart', []);
+            return count($cart);
+        }
+    }
+    
+    public function cartlist(Request $request)
+{
+   
+    if ($request->session()->has('user')) {
+       
+        $userId = $request->session()->get('user')['id'];
+        $cart = cart::where('user_id', $userId)->get();
+
+       
+        return view('frontend.pages.cart', ['products' => $cart]);
+
+    } else {
+        
+        $cart = $request->session()->get('cart', []);
+
+        $products = collect($cart);
+
+     
+        return view('frontend.pages.cart', ['products' => $products]);
     }
 }
-    static function cartitems(){
 
-       $userId=Session::get('user')['id'];
-       return cart::where('user_id',$userId)->count();
-        //return cart::all()->count();
-    
-    }
-    function cartlist(){
-        $userId=Session::get('user')['id'];
-       $products= DB::table('cart')
-       ->join('products','cart.product_id','=','products.u_id')
-       ->where('cart.user_id',$userId)
-       ->select(
-        'products.*',
-        'cart.id as cart_id',
-        'cart.quantity',
-        DB::raw('products.price * cart.quantity as total_price') // Calculate total price
-    )
-    ->get();
-       return view('frontend.pages.cart',['products'=>$products]);
-    }
 
-    
-    function removeCart($id){
-        cart::destroy($id);
-        return redirect('/cart');
+public function remove($id, Request $request)
+{
+    if ($request->session()->has('user')) {
+       
+        cart::where('id', $id)->delete();
+    } else {
+        $cart = $request->session()->get('cart', []);
+
+    if (empty($cart)) {
+        return response()->json(['message' => 'Cart is empty'], 400);
     }
-    function ordernow(){
-        $userId=Session::get('user')['id'];
-       $total=  $products= DB::table('cart')
-        ->join('products','cart.product_id','=','products.u_id')
-        ->where('cart.user_id',$userId)
-        // ->select('products.*','cart.id as cart_id')
-        ->sum('products.price');
-        return view('frontend.pages.checkout',['total'=>$total]);
+    if (!isset($id)) {
+        return response()->json(['message' => 'Invalid item ID'], 400);
+    }
+ 
+    $cart = array_filter($cart, function ($item) use ($id) {
+        return isset($item['cart_id']) && $item['cart_id'] != $id;
+    });
+
+    $request->session()->put('cart', $cart);
+    }
+    return redirect()->back()->with('success', 'Item removed from cart.');
+}
+
+    // function ordernow(){
+    //     $userId=Session::get('user')['id'];
+    //    $total=  $products= DB::table('cart')
+    //     ->join('products','cart.product_id','=','products.u_id')
+    //     ->where('cart.user_id',$userId)
+    //     // ->select('products.*','cart.id as cart_id')
+    //     ->sum('products.price');
+    //     return view('frontend.pages.checkout',['total'=>$total]);
      
-    }
-    function orderplace(Request $requests){
+    // }
+    public function orderplace(Request $requests) {
+        
+        if (!Session::has('user')) {
+            return redirect('/login')->with('message', 'Please login to place an order.');
+        }
+    
         
         $validatedData = $requests->validate([
             'payment' => 'required',
@@ -184,7 +270,6 @@ class FrontendController extends Controller
             'c_postal_zip' => 'required|numeric',
             'c_email_address' => 'required|email',
             'c_phone' => 'required|digits_between:10,15',
-           // 'quantity' => 'required|quantity',
         ], [
             'payment.required' => 'Payment method is required.',
             'c_fname.required' => 'First name is required.',
@@ -197,51 +282,56 @@ class FrontendController extends Controller
             'c_email_address.email' => 'Please provide a valid email address.',
             'c_phone.required' => 'Phone number is required.',
             'c_phone.digits_between' => 'Phone number must be between 10 and 15 digits.',
-          //  'quantity.required' => 'quantity is required.',
         ]);
-        
-
-        $userId=Session::get('user')['id'];
-        $allcart= cart::where('user_id',$userId)->get();
-
-        foreach($allcart as $request){
-        $order=new order;
-        $order->product_id= $request['product_id'];
-        $order->user_id= $request['user_id']; 
-        $order->quantity = $request['quantity'];
-       
-
-        $order->payment_method = $requests->payment;
-        $order->c_fname = $requests->c_fname;
-        $order->c_lname = $requests->c_lname;
-        $order->c_companyname = $requests->c_companyname;
-        $order->c_address = $requests->c_address;
-        $order->c_state_country = $requests->c_state_country;
-        $order->c_postal_zip = $requests->c_postal_zip;
-        $order->c_email_address = $requests->c_email_address;
-        $order->c_phone = $requests->c_phone;
-      
-        cart::where('user_id',$userId)->delete();
-
-        } 
-        $requests->input();
-        if ($order->save()) {
-           
-            return redirect()->back()->with('success', 'Product Add  successfully!');
+    
+        $userId = Session::get('user')['id'];
+        $allCart = cart::where('user_id', $userId)->get();
+    
+        if ($allCart->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
         }
-       
+    
+        
+        foreach ($allCart as $cartItem) {
+            $order = new order;
+            $order->product_id = $cartItem->product_id;
+            $order->user_id = $cartItem->user_id;
+            $order->quantity = $cartItem->quantity;
+            $order->total_price = $cartItem->total_price;
+    
+            $order->payment_method = $requests->payment;
+            $order->c_fname = $requests->c_fname;
+            $order->c_lname = $requests->c_lname;
+            $order->c_companyname = $requests->c_companyname;
+            $order->c_address = $requests->c_address;
+            $order->c_state_country = $requests->c_state_country;
+            $order->c_postal_zip = $requests->c_postal_zip;
+            $order->c_email_address = $requests->c_email_address;
+            $order->c_phone = $requests->c_phone;
+    
+            if (!$order->save()) {
+                return redirect()->back()->with('error', 'Failed to place order for a product.');
+            }
+            
+        }
+    
+        
+        cart::where('user_id', $userId)->delete();
+    
+        return redirect()->route('checkout')->with('success', 'Order placed successfully!');
     }
-    function myorders(){
+    
+    
+    function myordersNew(){
         $userId=Session::get('user')['id'];
         $orders= DB::table('orders')
         
         ->join('products', 'orders.product_id', '=', 'products.u_id')
         ->where('orders.user_id', $userId)
         ->get();
-      
-        return view('Customer',['orders'=>$orders]);
+        return view('frontend.pages.myorders',['orders'=>$orders]);
      
     }
 
-    
-}
+}   
+

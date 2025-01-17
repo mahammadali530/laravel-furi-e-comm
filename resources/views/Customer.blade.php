@@ -69,13 +69,14 @@
  </div>
 </div>
 </div>
-<table class="table datatable">
+<table class="  table table-bordered">
         <thead>
-          <tr>
+          <tr class=" table table-dark">
             <th>id</th>
             <th>product_id</th>
             <th>user_id</th>
             <th>Quantity</th>
+            <th>Total_Price</th>
             <th>payment_method</th>
             <th>Fname</th>
             <th>Lname</th>
@@ -88,13 +89,14 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="table-info">
         @foreach ($orders as $items)
         <tr>
             <td>{{ $items->id }}</td>
             <td>{{ $items->product_id }}</td>
             <td>{{ $items->user_id }}</td>
             <td>{{ $items->quantity }}</td>
+            <td>{{ $items->total_price }}</td>
             <td>{{ $items->payment_method }}</td>
             <td>{{ $items->c_fname }}</td>
             <td>{{ $items->c_lname }}</td>

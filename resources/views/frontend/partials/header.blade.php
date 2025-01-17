@@ -11,7 +11,7 @@ $total= FrontendController::cartitems();
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 <link href="{{ asset('asset/css/tiny-slider.css') }}" rel="stylesheet">
-<!-- <link href="{{ asset('resources/css/styles.css') }}" rel="stylesheet"> -->
+<link href="{{ asset('resources/css/styles.css') }}" rel="stylesheet">
 <link href="{{ asset('asset/scss/style.scss') }}" rel="stylesheet">
 
 <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
@@ -47,7 +47,9 @@ $total= FrontendController::cartitems();
     </button>
           
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+		  <li><a class="dropdown-item" href="{{ url('/myorders') }}">My orders</a></li>
             <li><a class="dropdown-item" href="logoutt">Logout</a></li>
+			
              </ul>
         </li>
         @else

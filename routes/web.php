@@ -18,8 +18,9 @@ use App\Http\Controllers\ordersController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\messgeController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\increaseController;
 use App\Http\Controllers\customermsegeController;
-
+use App\Http\Controllers\CartSessionController;
 use App\Http\Middleware\RedirectIfAuthenticatedAndNotLoggedIn;
 
 Route::middleware([RedirectIfAuthenticatedAndNotLoggedIn::class])->group(function () {
@@ -65,10 +66,17 @@ Route::get('/cart', function () {
 Route::get('/checkout', function () {
     return view('frontend.pages.checkout');
 });
+
 Route::get('/logoutt', function () {
     Session::forget('user');
     return redirect('login');
 });
+
+// Route::get('/myorders', function () {
+//     return 1;
+//     // return view('frontend.pages.myorders');
+// });
+Route::get('/myorders', [FrontendController::class, 'myordersNew']);
 
 Route::view('/Register','frontend.partials.Register');
 
@@ -87,13 +95,19 @@ Route::view('/Register','frontend.partials.Register');
  
  Route::post('/add_to_cart', [FrontendController::class, 'addToCart'])->name('add_to_cart');
  Route::get('/cart', [FrontendController::class, 'cartlist']);
- 
+ //Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
+
+ Route::post('/cart/increase', [CartSessionController::class, 'increase'])->name('update.increase_ses');
+Route::post('/cart/decrease', [CartSessionController::class, 'decrease'])->name('update.decrease_ses');
  // In routes/web.php
  Route::post('/update-increase', [CartController::class, 'increase'])->name('update.increase');
  Route::post('/update-decrease', [CartController::class, 'decrease'])->name('update.decrease');
 
+//  Route::post('/update-increase', [increaseController::class, 'increase'])->name('update.increase');
+//  Route::post('/update-decrease', [increaseController::class, 'decrease'])->name('update.decrease');
+
  
- Route::get('/removecart/{id}', [FrontendController::class, 'removeCart'])->name('remove.cart');
+ Route::get('/removecart/{id}', [FrontendController::class, 'remove'])->name('remove.cart');
  
  Route::post('/checkout', [FrontendController::class, 'orderplace'])->name('checkout');
  Route::post('/contact', [messgeController::class, 'messge']);
@@ -106,7 +120,7 @@ Route::view('/Register','frontend.partials.Register');
 
 
 Route::get('/ordernow', [FrontendController::class, 'ordernow']);
-Route::get('/myorders', [FrontendController::class, 'myorders']);
+// Route::get('/myorders', [FrontendController::class, 'myorders']);
 
 
 // register

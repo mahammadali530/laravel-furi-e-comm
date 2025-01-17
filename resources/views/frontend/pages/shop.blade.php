@@ -26,7 +26,7 @@
 					<div class="col-12 col-md-4 col-lg-3 mb-5 ">
 					  <div class="product-item">
 							<img src="{{ asset('storage/' . $items->image_1) }}" class="img-fluid product-thumbnail">
-								<h3 class="product-title">{{$items['f_name']}}</h3>
+								<h3 class="product-title" value="{{ old('f_name') }}">{{$items['f_name']}}</h3>
 								<strong class="product-price">₹{{$items['price']}}</strong><br><br>
 
 								@if ($userCart = App\Models\Cart::where('product_id', $items->u_id)->first())
@@ -42,6 +42,7 @@
 							<form action="{{ route('add_to_cart') }}" method="post">
 								@csrf
 								<input type="hidden" name="product_id" value="{{$items['u_id']}}">
+								
 								<div>
 									<label for="quantity">Select Quantity:</label>
 									<select name="quantity" id="quantity" required>
@@ -168,7 +169,7 @@
 $(document).ready(function () {
 
 });
-function increase(cart_id){
+function increase(id){
 let input = $(this).siblings('.quantity-amount');
 let currentVal = parseInt(input.val()) || 0;
 input.val(currentVal + 1);
@@ -177,7 +178,7 @@ $.ajax({
   type: 'POST',
   data: {
 	  _token: '{{ csrf_token() }}',
-	  cart_id: cart_id,
+	  id: id,
   },
   beforeSend: function () {
 	  // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
@@ -198,7 +199,7 @@ $.ajax({
 });
 }
 
-function decrease(cart_id){
+function decrease(id){
 let input = $(this).siblings('.quantity-amount');
 let currentVal = parseInt(input.val()) || 0;
 if (currentVal > 1) input.val(currentVal - 1);
@@ -207,7 +208,7 @@ $.ajax({
   type: 'POST',
   data: {
 	  _token: '{{ csrf_token() }}',
-	  cart_id: cart_id,
+	  id: id,
   },
   beforeSend: function () {
 	  // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
