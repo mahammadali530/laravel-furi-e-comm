@@ -28,7 +28,7 @@
 							<div class="intro-excerpt">
 								<h1>{{$items['title']}}</span></h1>
 								<p class="mb-4">{{$items['description']}}</p>
-								<p><a href="" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
+								<p><a href="{{ url('/shop') }}" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
 							</div>
 						</div>
 						<div class="col-lg-7">
