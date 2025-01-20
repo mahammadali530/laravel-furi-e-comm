@@ -36,7 +36,7 @@ $total= FrontendController::cartitems();
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="#"><img src="{{ asset('asset/images/user.svg') }}"></a></li>
+						<li><a class="nav-link" href="login"><img src="{{ asset('asset/images/user.svg') }}"></a></li>
 						<li><a class="nav-link" href="{{ url('/cart') }}"><img src="{{ asset('asset/images/cart.svg') }}">
 						{{$total}}</a></li>
 					</ul>
@@ -54,11 +54,11 @@ $total= FrontendController::cartitems();
         </li>
         @else
         <li>
-          <a class="btn btn-danger" href="login">Login</a>
-        </li>
-        <li>
+          <!-- <a class="btn btn-danger" href="login">Login</a>
+        </li> -->
+        <!-- <li>
           <a class="btn btn-info" href="Register">Register</a>
-        </li>
+        </li> -->
         @endif
 				</div>
 			</div>

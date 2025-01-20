@@ -11,6 +11,12 @@ class serviceController extends Controller
 {
     public function service(Request $request)
     {      
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        
             $imagePath = $request->file('image')->store('uploads_3', 'public');
             
         $items = new service();

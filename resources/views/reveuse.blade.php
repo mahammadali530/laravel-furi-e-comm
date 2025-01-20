@@ -37,15 +37,24 @@
             <div class="mb-3">
                 <label for="icon-name" class="form-label">Titale</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your Title" name="title" minlength="3" >
+                @error('title')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
                   </div>
             <div class="mb-3">
                 <label for="icon-name" class="form-label">description</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="description" >
+                @error('description')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
                 </div>
                
                 <div class="mb-3">
                 <label for="icon-image" class="form-label">Image</label>
                 <input class="form-control" type="file" id="" name="image" >
+                @error('image')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
             </div>
                
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

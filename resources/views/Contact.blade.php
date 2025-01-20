@@ -36,15 +36,24 @@
             <div class="mb-3">
                 <label for="icon-name" class="form-label">Location</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your Title" name="location" minlength="3" >
+                @error('location')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
             </div>
             <div class="mb-3">
                 <label for="icon-name" class="form-label">Gmail</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="gmail" >
+                @error('gmail')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
             </div>
             <div class="mb-3">
                 <label for="icon-name" class="form-label">Number</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="number" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                 pattern="\d{10}" title="please enter exactly 10 digits.">
+                @error('number')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
             </div>
                
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

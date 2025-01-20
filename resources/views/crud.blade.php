@@ -36,16 +36,25 @@
             <div class="mb-3">
                 <label for="icon-name" class="form-label">Name</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your Name" name="f_name" minlength="3" >
+                @error('f_name')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
                 <div class="invalid-feedback">Please, enter your name (at least 3 characters)!</div>
             </div>
             <div class="mb-3">
                 <label for="icon-name" class="form-label">Price</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your Price" name="price" >
+                @error('price')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
                 <div class="invalid-feedback">Please enter a valid mobile number (exactly 10 digits)!</div>
             </div>
             <div class="mb-3">
                 <label for="icon-image" class="form-label">Image</label>
                 <input class="form-control" type="file" id="" name="image_1" >
+                @error('image_1')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
             </div>
                
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

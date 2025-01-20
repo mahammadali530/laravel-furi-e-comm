@@ -10,6 +10,14 @@ class modernController extends Controller
 {
     public function modern(Request $request)
     {      
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_1'     => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_2'     => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
         $imagePath1 = $request->file('image')->store('uploads_8', 'public');
         $imagePath2 = $request->file('image_1')->store('uploads_8', 'public');
         $imagePath3 = $request->file('image_2')->store('uploads_8', 'public');

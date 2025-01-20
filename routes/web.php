@@ -66,51 +66,47 @@ Route::get('/cart', function () {
 Route::get('/checkout', function () {
     return view('frontend.pages.checkout');
 });
-
 Route::get('/logoutt', function () {
     Session::forget('user');
     return redirect('login');
 });
 
-// Route::get('/myorders', function () {
-//     return 1;
-//     // return view('frontend.pages.myorders');
-// });
+
 Route::get('/myorders', [FrontendController::class, 'myordersNew']);
 
 Route::view('/Register','frontend.partials.Register');
 
- Route::post("/login", [loginController::class, 'add']);
- Route::post("/Register", [loginController::class, 'Register']);
- Route::get('/', [FrontendController::class, 'Homepage']);
- Route::get("/shop", [FrontendController::class, 'indexpage']);
- Route::get('/about', [FrontendController::class, 'aboutPage']);
- Route::get('/services', [FrontendController::class, 'servicepage']);
- Route::get('/blog', [FrontendController::class, 'blogpage']);
- Route::get('/contact', [FrontendController::class, 'contenpage']);
- Route::get('/Customer', [ordersController::class, 'ordersall']);
- Route::get('/customer_masge', [customermsegeController::class, 'messgeall']);
+Route::post("/login", [loginController::class, 'add']);
+Route::post("/Register", [loginController::class, 'Register']);
+Route::get('/', [FrontendController::class, 'Homepage']);
+Route::get("/shop", [FrontendController::class, 'indexpage']);
+Route::get('/about', [FrontendController::class, 'aboutPage']);
+Route::get('/services', [FrontendController::class, 'servicepage']);
+Route::get('/blog', [FrontendController::class, 'blogpage']);
+Route::get('/contact', [FrontendController::class, 'contenpage']);
+Route::get('/Customer', [ordersController::class, 'ordersall']);
+Route::get('/customer_masge', [customermsegeController::class, 'messgeall']);
  
  //Route::get('/frontend.partials.footer', [FrontendController::class, 'footer2']);
  
- Route::post('/add_to_cart', [FrontendController::class, 'addToCart'])->name('add_to_cart');
- Route::get('/cart', [FrontendController::class, 'cartlist']);
- //Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
+Route::post('/add_to_cart', [FrontendController::class, 'addToCart'])->name('add_to_cart');
+Route::get('/cart', [FrontendController::class, 'cartlist']);
+//Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
 
- Route::post('/cart/increase', [CartSessionController::class, 'increase'])->name('update.increase_ses');
+Route::post('/cart/increase', [CartSessionController::class, 'increase'])->name('update.increase_ses');
 Route::post('/cart/decrease', [CartSessionController::class, 'decrease'])->name('update.decrease_ses');
- // In routes/web.php
- Route::post('/update-increase', [CartController::class, 'increase'])->name('update.increase');
- Route::post('/update-decrease', [CartController::class, 'decrease'])->name('update.decrease');
+// In routes/web.php
+Route::post('/update-increase', [CartController::class, 'increase'])->name('update.increase');
+Route::post('/update-decrease', [CartController::class, 'decrease'])->name('update.decrease');
 
 //  Route::post('/update-increase', [increaseController::class, 'increase'])->name('update.increase');
 //  Route::post('/update-decrease', [increaseController::class, 'decrease'])->name('update.decrease');
 
  
- Route::get('/removecart/{id}', [FrontendController::class, 'remove'])->name('remove.cart');
- 
- Route::post('/checkout', [FrontendController::class, 'orderplace'])->name('checkout');
- Route::post('/contact', [messgeController::class, 'messge']);
+Route::get('/removecart/{id}', [FrontendController::class, 'remove'])->name('remove.cart');
+
+Route::post('/checkout', [FrontendController::class, 'orderplace'])->name('checkout');
+Route::post('/contact', [messgeController::class, 'messge']);
 
  //Route::get('logout', [FrontendController::class, 'logout'])->name('logout');
 

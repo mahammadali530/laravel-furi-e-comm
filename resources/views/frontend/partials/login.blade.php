@@ -37,8 +37,14 @@
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
                 <input type="password" class="form-control" placeholder="Enter Your password" name="password" id="exampleInputPassword1">
+            </div>
+            <div class="col-12 d-flex justify-content-start">
+                    <p class="small mb-0">Don't have an account? 
+                    <a href="{{ url('/Register') }}" style="font-size: 1rem; color: blue;">Create a New Account</a>
+                    </p>
             </div><br>
             <button type="submit" class="btn btn-primary w-100">Submit</button>
+           
         </form>
     </div>
 </div>

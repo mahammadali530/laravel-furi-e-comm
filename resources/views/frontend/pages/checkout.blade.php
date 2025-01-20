@@ -133,43 +133,40 @@ $total= FrontendController::cartitems();
 		          </div>
 		        </div>
 		        <div class="col-md-6">
+					<div class="row mb-5">
+					<div class="col-md-12">
+					<h2 class="h3 mb-3 text-black">Your Order</h2>
+					<div class="p-3 p-lg-5 border bg-white">
+					<table class="table site-block-order-table mb-5">
 
-		        
-
-			<div class="row mb-5">
-			<div class="col-md-12">
-				<h2 class="h3 mb-3 text-black">Your Order</h2>
-				<div class="p-3 p-lg-5 border bg-white">
-				<table class="table site-block-order-table mb-5">
-				
 					<tbody>
-					
+
 					<tr>
-						<td class="text-black font-weight-bold"><strong> Total Product</strong></td>
-						<td class="text-black font-weight-bold"><strong>{{ $total }}</strong></td>
+					<td class="text-black font-weight-bold"><strong> Total Product</strong></td>
+					<td class="text-black font-weight-bold"><strong>{{ $total }}</strong></td>
 					</tr>
 					</tbody>
-				</table>
+					</table>
 
 		               
 
-			<div class="border p-3 mb-3">
-				<h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsecheque" role="button" aria-expanded="false" aria-controls="collapsecheque">Cash Payment</a></h3>
+				<div class="border p-3 mb-3">
+					<h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse" href="#collapsecheque" role="button" aria-expanded="false" aria-controls="collapsecheque">Cash Payment</a></h3>
 
-				<div class="collapse" id="collapsecheque">
-				<div class="py-2">
-				<input type="radio" value="cash" name="payment" value="{{ old('payment') }}" ><span>cash on delivery</span><br><br> </div>
+					<div class="collapse" id="collapsecheque">
+					<div class="py-2">
+					<input type="radio" value="cash" name="payment" value="{{ old('payment') }}" ><span>cash on delivery</span><br><br> </div>
+					</div>
+				</div>         
+					<button class="btn btn-black btn-lg py-3 btn-block">submit</button>
+					</div>
+					
 				</div>
-			</div>         
-				<button class="btn btn-black btn-lg py-3 btn-block">submit</button>
-				</div>
-				
-			</div>
 			</div>
 			
 		</div>
 		</form>
-	</div>
+	   </div>
 		<!-- </form> -->
 	</div>
 </div>

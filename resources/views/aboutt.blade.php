@@ -31,35 +31,59 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                   </div>
           <div class="modal-body">
+       
         <form action="" method="post" enctype="multipart/form-data" id="addMenuForm">
-            @csrf   
+            @csrf  
+           
+ 
             <div class="mb-3">
                 <label for="icon-name" class="form-label">Titale</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your Title" name="title" minlength="3" >
+                @error('title')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
                   </div>
             <div class="mb-3">
                 <label for="icon-name" class="form-label">description</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="description" >
+                @error('description')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
                 </div>
                 <div class="mb-3">
                 <label for="icon-name" class="form-label">description_1</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="description_1" >
+                @error('description_1')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
                 </div>
                 <div class="mb-3">
                 <label for="icon-name" class="form-label">description_2</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="description_2" >
+                @error('description_2')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
                 </div>
                 <div class="mb-3">
                 <label for="icon-name" class="form-label">description_3</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="description_3" >
+                @error('description_3')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
                 </div>
                 <div class="mb-3">
                 <label for="icon-name" class="form-label">description_4</label>
                 <input type="text" class="form-control" id="" placeholder="Enter Your description" name="description_4" >
+                @error('description_4')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
                 </div>
             <div class="mb-3">
                 <label for="icon-image" class="form-label">Image</label>
                 <input class="form-control" type="file" id="" name="image" >
+                @error('image')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
             </div>
                
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

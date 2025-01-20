@@ -121,20 +121,20 @@ class FrontendController extends Controller
             $product = icon::find($productId);
     
             
-            if ($product) {
-                $quantity = $request->input('quantity');
-        $totalPrice = $product->price * $quantity;
-                
-        $cart = new cart;
-        $cart->user_id = $request->session()->get('user')['id'];
-        $cart->product_id = $request->input('product_id');
-        $cart->quantity = $quantity;
-        $cart->f_name = $product->f_name;
-        $cart->price = $product->price;
-        $cart->total_price = $totalPrice;
-        $cart->image_1 =$product->image_1;
-       
-        $cart->save();
+        if ($product) {
+            $quantity = $request->input('quantity');
+            $totalPrice = $product->price * $quantity;
+                    
+            $cart = new cart;
+            $cart->user_id = $request->session()->get('user')['id'];
+            $cart->product_id = $request->input('product_id');
+            $cart->quantity = $quantity;
+            $cart->f_name = $product->f_name;
+            $cart->price = $product->price;
+            $cart->total_price = $totalPrice;
+            $cart->image_1 =$product->image_1;
+        
+            $cart->save();
                 
                 return redirect('/cart')->with('success', 'Product added to your cart.');
             } else {

@@ -11,6 +11,11 @@ class blogController extends Controller
 {
     public function blog(Request $request)
     {      
+        $request->validate([
+            'description' => 'required|string|max:1000',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        
             $imagePath = $request->file('image')->store('uploads_4', 'public');
             
         $items = new blog();

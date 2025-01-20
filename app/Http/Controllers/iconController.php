@@ -10,7 +10,12 @@ class iconController extends Controller
 {
     public function icon(Request $request)
     {
-        
+        $request->validate([
+            'f_name'  => 'required|string|max:255',
+            'price'   => 'required|numeric|min:0',
+            'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
         $imagePath = $request->file('image_1')->store('uploads', 'public');
 
         

@@ -9,7 +9,18 @@ use App\Models\About;
 class AboutController extends Controller
 {
         public function about(Request $request)
-        {      
+
+        {
+            $request->validate([
+                'title'          => 'required|string|max:255',
+                'description'    => 'required|string',
+                'description_1'  => 'required|string',
+                'description_2'  => 'required|string',
+                'description_3'  => 'required|string',
+                'description_4'  => 'required|string',
+                'image'          => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+            
             $imagePath = $request->file('image')->store('uploads_1', 'public');
                 
             $items = new About();

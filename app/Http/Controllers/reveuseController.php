@@ -9,7 +9,13 @@ use App\Models\reveuse;
 class reveuseController extends Controller
 {
     public function reveuse(Request $request)
-    {      
+    {  
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+            
         $imagePath = $request->file('image')->store('uploads_9', 'public');
             
         $items = new reveuse();

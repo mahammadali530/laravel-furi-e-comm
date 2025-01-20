@@ -10,7 +10,11 @@ class ContactController extends Controller
 {
     public function Contact(Request $request)
     {      
-           
+        $request->validate([
+            'location' => 'required|string|max:255',
+            'gmail'    => 'required|email|max:255',
+            'number'   => 'required|digits_between:10,15|numeric'
+        ]);
             
         $items = new Contact();
         $items->location = $request->location;

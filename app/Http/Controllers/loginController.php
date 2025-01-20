@@ -27,7 +27,13 @@ class loginController extends Controller
     // }
    
 
-    function Register(Request $request){
+    function Register(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:logins,email|max:255', 
+            'password' => 'required|string|min:8|confirmed',
+        ]);
        // return $request->input();
        $user = new login;
        $user->name = $request->name;
