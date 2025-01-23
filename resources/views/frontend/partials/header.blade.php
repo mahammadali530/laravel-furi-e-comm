@@ -11,7 +11,7 @@ $total= FrontendController::cartitems();
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 <link href="{{ asset('asset/css/tiny-slider.css') }}" rel="stylesheet">
-<link href="{{ asset('resources/css/styles.css') }}" rel="stylesheet">
+<!-- <link href="{{ asset('resources/css/styles.css') }}" rel="stylesheet"> -->
 <link href="{{ asset('asset/scss/style.scss') }}" rel="stylesheet">
 
 <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
@@ -36,7 +36,7 @@ $total= FrontendController::cartitems();
 					</ul>
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="login"><img src="{{ asset('asset/images/user.svg') }}"></a></li>
+						<!-- <li><a class="nav-link" href="login"><img src="{{ asset('asset/images/user.svg') }}"></a></li> -->
 						<li><a class="nav-link" href="{{ url('/cart') }}"><img src="{{ asset('asset/images/cart.svg') }}">
 						{{$total}}</a></li>
 					</ul>
@@ -54,11 +54,7 @@ $total= FrontendController::cartitems();
         </li>
         @else
         <li>
-          <!-- <a class="btn btn-danger" href="login">Login</a>
-        </li> -->
-        <!-- <li>
-          <a class="btn btn-info" href="Register">Register</a>
-        </li> -->
+		<li><a style="margin-top:-25px; margin-left:-40px;" class="nav-link" href="login"><img src="{{ asset('asset/images/user.svg') }}"></a></li>
         @endif
 				</div>
 			</div>

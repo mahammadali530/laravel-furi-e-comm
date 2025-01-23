@@ -54,12 +54,19 @@ class loginController extends Controller
             if (Session::has('cart')) {
                 foreach (Session::get('cart') as $cartItem) {
                     
-                    $product = icon::find($cartItem['product_id']);
-   
-                    if ($product) {
-                        // dd($cartItem);
-                       
-                        cart::create([
+                    // Check if the cart item already exists for the user
+                    $existingCartItem = Cart::where('user_id', $user->id)
+                                           ->where('product_id', $cartItem['product_id'])
+                                           ->first();
+                    
+                    if ($existingCartItem) {
+                        // If the product is already in the cart, update the quantity
+                        $existingCartItem->quantity += $cartItem['quantity']; // Increment the quantity
+                        $existingCartItem->total_price = $existingCartItem->price * $existingCartItem->quantity;
+                        $existingCartItem->save(); // Save the changes
+                    } else {
+                        // If the product is not in the cart, create a new entry
+                        Cart::create([
                             'user_id' => $user->id,
                             'product_id' => $cartItem['product_id'],
                             'quantity' => $cartItem['quantity'],
@@ -67,10 +74,11 @@ class loginController extends Controller
                             'price' => $cartItem['price'],
                             'image_1' => $cartItem['image_1'],
                             'total_price' => $cartItem['price'] * $cartItem['quantity'],
-                           
                         ]);
-                       
                     }
+                       
+                       
+                  //  }
                 }
                
                 Session::forget('cart');

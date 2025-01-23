@@ -90,8 +90,11 @@ Route::get('/customer_masge', [customermsegeController::class, 'messgeall']);
  //Route::get('/frontend.partials.footer', [FrontendController::class, 'footer2']);
  
 Route::post('/add_to_cart', [FrontendController::class, 'addToCart'])->name('add_to_cart');
+//Route::post('/add-to-cart-session', [FrontendController::class, 'addToCartSession'])->name('add_to_cart_session');
 Route::get('/cart', [FrontendController::class, 'cartlist']);
 //Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
+Route::post('/edit/increase', [CartSessionController::class, 'increaseQuantity'])->name('edit.increase');
+Route::post('/edit/decrease', [CartSessionController::class, 'decreaseQuantity'])->name('edit.decrease');
 
 Route::post('/cart/increase', [CartSessionController::class, 'increase'])->name('update.increase_ses');
 Route::post('/cart/decrease', [CartSessionController::class, 'decrease'])->name('update.decrease_ses');

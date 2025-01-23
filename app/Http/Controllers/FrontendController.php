@@ -117,12 +117,13 @@ class FrontendController extends Controller
             $productId = $request->input('product_id');
             $quantity = $request->input('quantity');
     
+            // dd($productId);
             
             $product = icon::find($productId);
     
             
         if ($product) {
-            $quantity = $request->input('quantity');
+            $quantity = 1;
             $totalPrice = $product->price * $quantity;
                     
             $cart = new cart;
@@ -133,7 +134,7 @@ class FrontendController extends Controller
             $cart->price = $product->price;
             $cart->total_price = $totalPrice;
             $cart->image_1 =$product->image_1;
-        
+       // dd($cart);
             $cart->save();
                 
                 return redirect('/cart')->with('success', 'Product added to your cart.');
@@ -144,14 +145,17 @@ class FrontendController extends Controller
         } else {
             
             $productId = $request->input('product_id');
-            $quantity = $request->input('quantity');
-    
+            $quantity = 1;
             
             $product = icon::find($productId);
+
             $cart = $request->session()->get('cart', []);
+
             if($cart){
                 $lastItem = end($cart);
+               
                     $id = $lastItem['id'] + 1;
+               
             } else {
                 $id = 0;
             }
@@ -166,14 +170,15 @@ class FrontendController extends Controller
                 'image_1' => $product->image_1,
                 ];
     
-               
                 $cart[] = $cartItem;
+                // dd($cart);
                 
                 $request->session()->put('cart', $cart);
                 
                 $cart = $request->session()->get('cart', []);
-              
-                return redirect('/cart')->with('success', 'Product added to your session cart.');
+                // dd($cart);
+             
+                return redirect('/shop')->with('success', 'Product added to your session cart.');
             } else {
                 
                 return redirect('/shop')->with('error', 'Product not found.');
@@ -235,7 +240,7 @@ public function remove($id, Request $request)
     }
  
     $cart = array_filter($cart, function ($item) use ($id) {
-        return isset($item['cart_id']) && $item['cart_id'] != $id;
+        return isset($item['id']) && $item['id'] != $id;
     });
 
     $request->session()->put('cart', $cart);
@@ -244,6 +249,10 @@ public function remove($id, Request $request)
 }
 
     // function ordernow(){
+
+    //     if (!Session::has('user')) {
+    //         return redirect('/login')->with('message', 'Please login to place an order.');
+    //     }
     //     $userId=Session::get('user')['id'];
     //    $total=  $products= DB::table('cart')
     //     ->join('products','cart.product_id','=','products.u_id')

@@ -43,37 +43,44 @@ $total= FrontendController::cartitems();
               </tr>
         </thead>
         <tbody>
-  @if(session()->has('user'))
+@if(session()->has('user'))
+  @php
+    $to_price = [];
+  @endphp
 @foreach($products as $product)
-
-  <tr>
-    <td class="product-thumbnail">
-        <img src="{{ asset('storage/' . $product->image_1) }}" alt="Image" class="img-fluid">
-    </td>
-    <td class="product-name">
-        <h2 class="h5 text-black">{{ $product->f_name }}</h2>
-    </td>
-    <td>₹<span class="product-price">{{ $product->price }}</span></td>
-    <td>
-        <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-            <div class="input-group">
-                <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $product->id }}" onclick="decrease({{ $product->id }})">&minus;</button>
-                <input type="text" class="form-control text-center quantity-amount" data-cart-id="{{ $product->id }}" value="{{ $product->quantity }}" />
-                <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $product->id }}" onclick="increase({{ $product->id }})">&plus;</button>
-            </div>
-        </div>
-    </td>
-    <td>₹<span class="item-total">{{ $product->total_price }}</span></td>
-    <td>
-        <!-- Correctly pass the cart_id to the route -->
-        <a href="{{ route('remove.cart', ['id' => $product->id]) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">X</a>
-    </td>
+<tr>
+  <td class="product-thumbnail">
+      <img src="{{ asset('storage/' . $product->image_1) }}" alt="Image" class="img-fluid">
+  </td>
+  <td class="product-name">
+      <h2 class="h5 text-black">{{ $product->f_name }}</h2>
+  </td>
+  <td>₹<span class="product-price">{{ $product->price }}</span></td>
+  <td>
+      <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
+          <div class="input-group">
+              <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $product->id }}" onclick="decrease({{ $product->id }})">&minus;</button>
+              <input type="text" class="form-control text-center quantity-amount" data-cart-id="{{ $product->id }}" value="{{ $product->quantity }}" />
+              <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $product->id }}" onclick="increase({{ $product->id }})">&plus;</button>
+          </div>
+      </div>
+  </td>
+  <td>₹<span class="item-total">{{ $to_price[] = $product->total_price }}</span></td>
+  <td>
+      <!-- Correctly pass the cart_id to the route -->
+      <a href="{{ route('remove.cart', ['id' => $product->id]) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">X</a>
+  </td>
 </tr>
 @endforeach
 @else
+
+@php
+$to_price = [];
+@endphp
+
 @foreach(session('cart', []) as $item)
 
-<tr >
+<tr>
     <td class="product-thumbnail">
         @if(isset($item['image_1']) && !empty($item['image_1']))
             <img src="{{ asset('storage/' . $item['image_1']) }}" alt="Image" class="img-fluid">
@@ -82,35 +89,32 @@ $total= FrontendController::cartitems();
         @endif
     </td>
     <td class="product-name">
-        <h2 class="h5 text-black">{{ $item['f_name'] }}</h2>
+            <h2 class="h5 text-black">{{ $item['f_name'] }}</h2>
     </td>
     <td>₹<span class="product-price">{{ $item['price'] }}</span></td>
     <td>
       
-  @if(isset($item['id']) && isset($item['quantity'])) 
-    
+@if(isset($item['id']) && isset($item['quantity'])) 
+  
         <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
             <div class="input-group">
                 <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $item['id'] }}" onclick="decrease_s({{ $item['id'] }})">&minus;</button>
-                
                 <input type="text" class="form-control text-center quantity-amount" data-cart-id="{{ $item['id'] }}" value="{{ $item['quantity'] }}" />
                 <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $item['id'] }}" onclick="increase_s({{ $item['id'] }})">&plus;</button>
-          @else
-                      
-                <!-- <p>Cart ID or Quantity missing</p> -->
-        @endif
+@else         
+            <!-- <p>Cart ID or Quantity missing</p> -->
+@endif
             </div>
         </div>
     </td>
-    <td>₹<span class="item-total">{{ $item['total_price'] }}</span></td>
+    
+    <td>₹<span class="item-total">{{ $to_price[] = $item['price'] * $item['quantity'] }}</span></td>
     <td>
-    @if(isset($item['id']))
-       
+ @if(isset($item['id']))
         <a href="{{ route('remove.cart', ['id' => $item['id']]) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">X</a>
-        @else
-                    
-                      <!-- <span>Cart ID Missing</span> -->
-                  @endif
+@else     
+     <!-- <span>Cart ID Missing</span> -->
+@endif
     </td>
 </tr>
 @endforeach
@@ -141,8 +145,7 @@ $total= FrontendController::cartitems();
                         </tr> -->
                       </tbody>
                     </table>
-                  </div>
-                
+                </div>
               </div>
         
               <div class="row">
@@ -190,12 +193,11 @@ $total= FrontendController::cartitems();
                           <span class="text-black">Total Price</span>
                         </div>
                         <div class="col-md-6 text-right">
-                        @if(isset($item['total_price']))
-                        <strong class="text-black">{{$item['total_price'] }}</strong>
-                        @else
-                            
-                              <!-- <span>Cart ID Missing</span> -->
-                          @endif
+                        
+    <strong class="text-black">{{ array_sum($to_price) }}</strong>
+
+
+
                           </div>
                       </div>
                      
@@ -213,9 +215,9 @@ $total= FrontendController::cartitems();
           </div>
 
           
-          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-          <script>
+<script>
  $(document).ready(function () {
     
   });
@@ -259,7 +261,7 @@ $total= FrontendController::cartitems();
         });
     }
 
-    function decrease(id){
+   function decrease(id){
       let input = $(this).siblings('.quantity-amount');
         let currentVal = parseInt(input.val()) || 0;
         if (currentVal > 1) input.val(currentVal - 1);
@@ -309,7 +311,7 @@ $total= FrontendController::cartitems();
                 success: function (response) {
                     console.log('Response received:', response);
                     if (response.status === 'success') {
-                        alert('Cart updated successfully!');
+                       // alert('Cart updated successfully!');
                         location.reload();
                     } else {
                         alert('Failed to update cart. Message: ' + response.message);

@@ -22,45 +22,45 @@
 		      	<div class="row">
 
 		      		<!-- Start Column 1 -->
-					  @foreach ( $products as $items )
-					<div class="col-12 col-md-4 col-lg-3 mb-5 ">
-					  <div class="product-item">
-							<img src="{{ asset('storage/' . $items->image_1) }}" class="img-fluid product-thumbnail">
-								<h3 class="product-title" value="{{ old('f_name') }}">{{$items['f_name']}}</h3>
-								<strong class="product-price">₹{{$items['price']}}</strong><br><br>
+					 @foreach ($products as $items)
+    <div class="col-12 col-md-4 col-lg-3 mb-5">
+        <div class="product-item">
+            <img src="{{ asset('storage/' . $items->image_1) }}" class="img-fluid product-thumbnail">
+            <h3 class="product-title">{{ $items->f_name }}</h3>
+            <strong class="product-price">₹{{ $items->price }}</strong><br><br>
+		@php
+			$cartItems = session('cart', []);
+			$itemIds = array_column($cartItems, 'product_id');	
+		@endphp
+	
+           @if (session()->has('cart') && in_array($items['u_id'], $itemIds))
+    <div class="input-group">
+        <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $items['u_id'] }}" onclick="decrease_s({{ $items['u_id'] }})">&minus;</button>
+        <input type="text" class="form-control text-center quantity-amount" data-cart-id="{{ $items['u_id'] }}" value="{{ collect(session('cart'))->firstWhere('product_id', $items['u_id'])['quantity'] ?? 0}}" />
+        <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $items['u_id'] }}" onclick="increase_s({{ $items['u_id'] }})">&plus;</button>
+    </div>
+   @else 
+    @if ($userCart = App\Models\Cart::where('product_id', $items->u_id)->first())
+        <div class="input-group">
+            <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $userCart->id }}" onclick="decrease({{ $userCart->id }})">&minus;</button>
+            <input type="text" class="form-control text-center quantity-amount" data-cart-id="{{ $userCart->id }}" value="{{ $userCart->quantity }}" />
+            <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $userCart->id }}" onclick="increase({{ $userCart->id }})">&plus;</button>
+        </div>
+    @else  
+        <form action="{{ route('add_to_cart') }}" method="post">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $items->u_id }}">
+            <button class="btn btn-primary">Add To Cart</button>
+        </form>
+    @endif
+@endif
 
-								@if ($userCart = App\Models\Cart::where('product_id', $items->u_id)->first())
-
-							<div class="input-group">
-								<button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $userCart->id }}" onclick="decrease({{ $userCart->id }})">&minus;</button>
-								<input type="text" class="form-control text-center quantity-amount" 
-									data-cart-id="{{ $userCart->id }}" 
-									value="{{ $userCart->quantity }}" />
-								<button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $userCart->id }}" onclick="increase({{ $userCart->id }})">&plus;</button>
-							</div>
-                           @else
-							<form action="{{ route('add_to_cart') }}" method="post">
-								@csrf
-								<input type="hidden" name="product_id" value="{{$items['u_id']}}">
-								
-								<div>
-									<label for="quantity">Select Quantity:</label>
-									<select name="quantity" id="quantity" required>
-										@for ($i = 1; $i <= 10; $i++) 
-											<option value="{{ $i }}">{{ $i }}</option>
-										@endfor
-									</select>
-                                  </div><br>
-								<button class="btn btn-primary">Add To Cart</button>
-							</form>
-							@endif
-							<br>
-                       </div>
-		           </div>
-				   @endforeach
-		   </div>
-	   </div>
-   </div>
+            </div>
+        </div>
+@endforeach
+		</div>
+	</div>
+</div>
 					
 					<!-- End Column 1 -->
 						
@@ -77,7 +77,6 @@
 						</a>
 					</div>  -->
 					<!-- End Column 2 -->
-
 					<!-- Start Column 3 -->
 					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5">
 						<a class="product-item" href="#">
@@ -91,7 +90,6 @@
 						</a>
 					</div> -->
 					<!-- End Column 3 -->
-
 					<!-- Start Column 4 -->
 					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5">
 						<a class="product-item" href="#">
@@ -105,8 +103,6 @@
 						</a>
 					</div> -->
 					<!-- End Column 4 -->
-
-
 					<!-- Start Column 1 -->
 					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5">
 						<a class="product-item" href="#">
@@ -119,8 +115,7 @@
 							</span>
 						</a>
 					</div>  -->
-					<!-- End Column 1 -->
-						
+					<!-- End Column 1 -->	
 					<!-- Start Column 2 -->
 					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5">
 						<a class="product-item" href="#">
@@ -134,7 +129,6 @@
 						</a>
 					</div>  -->
 					<!-- End Column 2 -->
-
 					<!-- Start Column 3 -->
 					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5">
 						<a class="product-item" href="#">
@@ -148,7 +142,6 @@
 						</a>
 					</div> -->
 					<!-- End Column 3 -->
-
 					<!-- Start Column 4 -->
 					<!-- <div class="col-12 col-md-4 col-lg-3 mb-5">
 						<a class="product-item" href="#">
@@ -163,72 +156,114 @@
 					</div> -->
 					<!-- End Column 4 -->
  
-					<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+		<script>
+		$(document).ready(function () {
+
+		});
+		function increase(id){
+		let input = $(this).siblings('.quantity-amount');
+		let currentVal = parseInt(input.val()) || 0;
+		input.val(currentVal + 1);
+		$.ajax({
+		url: '{{ route("update.increase") }}',
+		type: 'POST',
+		data: {
+			_token: '{{ csrf_token() }}',
+			id: id,
+		},
+		beforeSend: function () {
+			// console.log('Sending data:', { cart_id: cartId, quantity: quantity });
+		},
+		success: function (response) {
+			console.log('Response received:', response);
+			if (response.status === 'success') {
+				// alert('Cart updated successfully!');
+				location.reload();
+			} else {
+				alert('Failed to update cart. Message: ' + response.message);
+			}
+		},
+		error: function (xhr, status, error) {
+			console.error('AJAX Error:', { xhr, status, error });
+			alert('An error occurred. Please try again.');
+		}
+		});
+		}
+
+		function decrease(id){
+		let input = $(this).siblings('.quantity-amount');
+		let currentVal = parseInt(input.val()) || 0;
+		if (currentVal > 1) input.val(currentVal - 1);
+		$.ajax({
+		url: '{{ route("update.decrease") }}',
+		type: 'POST',
+		data: {
+			_token: '{{ csrf_token() }}',
+			id: id,
+		},
+		beforeSend: function () {
+			// console.log('Sending data:', { cart_id: cartId, quantity: quantity });
+		},
+		success: function (response) {
+			console.log('Response received:', response);
+			if (response.status === 'success') {
+				// alert('Cart updated successfully!');
+				location.reload();
+			} else {
+				alert('Failed to update cart. Message: ' + response.message);
+			}
+		},
+		error: function (xhr, status, error) {
+			console.error('AJAX Error:', { xhr, status, error });
+			alert('An error occurred. Please try again.');
+		}
+		});
+		}
+		</script>
+
+ <!-- session increase and decrease -->
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
+        function updateCart(productId, action) {
+            $.ajax({
+                url: action === 'increase' ? '{{ route("edit.increase") }}' : '{{ route("edit.decrease") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    product_id: productId,
+                },
+				
+                beforeSend: function () {      
+                },
+                success: function (response) {
+                    console.log('Response received:', response);
+                    if (response.status === 'success') {
+                       // alert('Cart updated successfully!');
+                        location.reload();
+                    } else {
+                        alert('Failed to update cart. Message: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', { xhr, status, error });
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+        window.increase_s = function (productId) {
+            updateCart(productId, 'increase');
+        };
 
-});
-function increase(id){
-let input = $(this).siblings('.quantity-amount');
-let currentVal = parseInt(input.val()) || 0;
-input.val(currentVal + 1);
-$.ajax({
-  url: '{{ route("update.increase") }}',
-  type: 'POST',
-  data: {
-	  _token: '{{ csrf_token() }}',
-	  id: id,
-  },
-  beforeSend: function () {
-	  // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
-  },
-  success: function (response) {
-	  console.log('Response received:', response);
-	  if (response.status === 'success') {
-		  alert('Cart updated successfully!');
-		  location.reload();
-	  } else {
-		  alert('Failed to update cart. Message: ' + response.message);
-	  }
-  },
-  error: function (xhr, status, error) {
-	  console.error('AJAX Error:', { xhr, status, error });
-	  alert('An error occurred. Please try again.');
-  }
-});
-}
-
-function decrease(id){
-let input = $(this).siblings('.quantity-amount');
-let currentVal = parseInt(input.val()) || 0;
-if (currentVal > 1) input.val(currentVal - 1);
-$.ajax({
-  url: '{{ route("update.decrease") }}',
-  type: 'POST',
-  data: {
-	  _token: '{{ csrf_token() }}',
-	  id: id,
-  },
-  beforeSend: function () {
-	  // console.log('Sending data:', { cart_id: cartId, quantity: quantity });
-  },
-  success: function (response) {
-	  console.log('Response received:', response);
-	  if (response.status === 'success') {
-		  alert('Cart updated successfully!');
-		  location.reload();
-	  } else {
-		  alert('Failed to update cart. Message: ' + response.message);
-	  }
-  },
-  error: function (xhr, status, error) {
-	  console.error('AJAX Error:', { xhr, status, error });
-	  alert('An error occurred. Please try again.');
-  }
-});
-}
+        window.decrease_s = function (productId) {
+            updateCart(productId, 'decrease');
+        };
+    });
 </script>
+
+
+
 
 		      
         @include('frontend.partials.footer')

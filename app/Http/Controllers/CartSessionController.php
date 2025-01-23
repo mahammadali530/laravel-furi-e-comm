@@ -9,6 +9,7 @@ class CartSessionController extends Controller
 {
     public function increase(Request $request)
     {
+        
         $cart = session()->get('cart', []);
         if (isset($cart[$request->id])) {
             $cart[$request->id]['quantity'] += 1;
@@ -35,5 +36,52 @@ class CartSessionController extends Controller
     
         return response()->json(['status' => 'success', 'message' => 'Cart updated successfully!']);
     }
-    
+
+
+public function increaseQuantity(Request $request)
+{
+    $cart = session()->get('cart', []);
+    $totalPrice = 0;
+
+    foreach ($cart as &$item) {
+        if ($item['product_id'] == $request->product_id) {  // Use product_id here
+            $item['quantity']++;
+        }
+        $totalPrice += $item['quantity'] * $item['price'];
+    }
+
+    session()->put('cart', $cart);
+
+    return response()->json([
+        'status' => 'success', 
+        'message' => 'Quantity increased',
+        'quantity' => collect($cart)->firstWhere('product_id', $request->product_id)['quantity'],
+        'totalPrice' => $totalPrice
+    ]);
 }
+
+public function decreaseQuantity(Request $request)
+{
+    $cart = session()->get('cart', []);
+    $totalPrice = 0;
+
+    foreach ($cart as &$item) {
+        if ($item['product_id'] == $request->product_id && $item['quantity'] > 1) {
+            $item['quantity']--;
+        }
+        $totalPrice += $item['quantity'] * $item['price'];
+        
+    }
+
+    session()->put('cart', $cart);
+
+    return response()->json([
+        'status' => 'success', 
+        'message' => 'Quantity decreased',
+        'quantity' => collect($cart)->firstWhere('product_id', $request->product_id)['quantity'],
+        'totalPrice' => $totalPrice
+    ]);
+}
+
+}
+
