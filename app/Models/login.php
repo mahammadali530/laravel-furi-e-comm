@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class login extends Model
 {
     use HasFactory;
-    protected $table='login';
+    protected $table='logins';
    // protected $primaryKey = 'u_id';
-    protected $fillable = ['email', 'password'];
+    protected $fillable = ['email', 'password','otp','otp_expires_at'];
     public $timestamps=false;
    
 }

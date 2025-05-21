@@ -8,14 +8,12 @@
 							</div>
 						</div>
 						<div class="col-lg-7">
-							
+					
 						</div>
 					</div>
 				</div>
 			</div>
 		<!-- End Hero Section -->
-
-		
 
 		<div class="untree_co-section product-section before-footer-section">
 		    <div class="container">
@@ -32,7 +30,6 @@
 			$cartItems = session('cart', []);
 			$itemIds = array_column($cartItems, 'product_id');	
 		@endphp
-	
            @if (session()->has('cart') && in_array($items['u_id'], $itemIds))
     <div class="input-group">
         <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $items['u_id'] }}" onclick="decrease_s({{ $items['u_id'] }})">&minus;</button>
@@ -54,7 +51,6 @@
         </form>
     @endif
 @endif
-
             </div>
         </div>
 @endforeach
@@ -160,67 +156,49 @@
 
 		<script>
 		$(document).ready(function () {
+  $('.increase, .decrease').click(function () {
+    let button = $(this);
+    let cartId = button.data('cart-id');
+    let inputField = $('input[data-cart-id="' + cartId + '"]');
+    let row = $('tr[data-cart-id="' + cartId + '"]');
 
-		});
-		function increase(id){
-		let input = $(this).siblings('.quantity-amount');
-		let currentVal = parseInt(input.val()) || 0;
-		input.val(currentVal + 1);
-		$.ajax({
-		url: '{{ route("update.increase") }}',
-		type: 'POST',
-		data: {
-			_token: '{{ csrf_token() }}',
-			id: id,
-		},
-		beforeSend: function () {
-			// console.log('Sending data:', { cart_id: cartId, quantity: quantity });
-		},
-		success: function (response) {
-			console.log('Response received:', response);
-			if (response.status === 'success') {
-				// alert('Cart updated successfully!');
-				location.reload();
-			} else {
-				alert('Failed to update cart. Message: ' + response.message);
-			}
-		},
-		error: function (xhr, status, error) {
-			console.error('AJAX Error:', { xhr, status, error });
-			alert('An error occurred. Please try again.');
-		}
-		});
-		}
+    let currentQuantity = parseInt(inputField.val()) || 1;
+    let isIncrease = button.hasClass('increase');
+    let newQuantity = isIncrease ? currentQuantity + 1 : currentQuantity - 1;
 
-		function decrease(id){
-		let input = $(this).siblings('.quantity-amount');
-		let currentVal = parseInt(input.val()) || 0;
-		if (currentVal > 1) input.val(currentVal - 1);
-		$.ajax({
-		url: '{{ route("update.decrease") }}',
-		type: 'POST',
-		data: {
-			_token: '{{ csrf_token() }}',
-			id: id,
-		},
-		beforeSend: function () {
-			// console.log('Sending data:', { cart_id: cartId, quantity: quantity });
-		},
-		success: function (response) {
-			console.log('Response received:', response);
-			if (response.status === 'success') {
-				// alert('Cart updated successfully!');
-				location.reload();
-			} else {
-				alert('Failed to update cart. Message: ' + response.message);
-			}
-		},
-		error: function (xhr, status, error) {
-			console.error('AJAX Error:', { xhr, status, error });
-			alert('An error occurred. Please try again.');
-		}
-		});
-		}
+    if (newQuantity < 1); 
+
+    $.ajax({
+        url: isIncrease ? '{{ route("update.increase") }}' : '{{ route("update.decrease") }}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: cartId,
+        },
+        success: function (response) {
+            if (response.status === 'success') {
+                if (response.removed) {
+                    row.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                } else {
+                    inputField.val(response.newQuantity);
+                    row.find('.item-total').text('' + response.newTotalPrice);
+                }
+                
+               
+                $('.total-cart-price').text('' + response.cart_total);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', { xhr, status, error });
+            alert('Koi error aayi hai. Kripya dubara koshish karein.');
+        }
+    });
+});
+});
+
+    
 		</script>
 
  <!-- session increase and decrease -->
@@ -234,14 +212,15 @@
                     _token: '{{ csrf_token() }}',
                     product_id: productId,
                 },
-				
                 beforeSend: function () {      
                 },
                 success: function (response) {
                     console.log('Response received:', response);
                     if (response.status === 'success') {
-                       // alert('Cart updated successfully!');
-                        location.reload();
+						let inputField = $('.quantity-amount[data-cart-id="' + productId + '"]');
+						inputField.val(response.quantity); 
+						$('#total-price').text(response.totalPrice.toFixed(2));
+                         console.log('Cart updated successfully!');
                     } else {
                         alert('Failed to update cart. Message: ' + response.message);
                     }
@@ -255,7 +234,6 @@
         window.increase_s = function (productId) {
             updateCart(productId, 'increase');
         };
-
         window.decrease_s = function (productId) {
             updateCart(productId, 'decrease');
         };

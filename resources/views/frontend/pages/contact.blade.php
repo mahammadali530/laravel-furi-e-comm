@@ -67,7 +67,7 @@
                       </svg>
                     </div> <!-- /.icon -->
                     <div class="service-contents">
-                      <p>+91={{$items['number']}}</p>
+                      <p>+91  {{$items['number']}}</p>
                     </div> <!-- /.service-contents-->
                   </div> <!-- /.service -->
                 </div>
@@ -88,7 +88,7 @@
                   <div class="col-6">
                     <div class="form-group">
                       <label class="text-black" for="fname">First name</label>
-                      <input type="text" class="form-control" id="name" name="name">
+                      <input type="text" class="form-control" id="name" placeholder="Enter Your First Name" name="name">
                       @error('name')
                      <small class="text-danger">{{ $message }}</small>
                      @enderror
@@ -97,7 +97,7 @@
                   <div class="col-6">
                     <div class="form-group">
                       <label class="text-black" for="lname">Last name</label>
-                      <input type="text" class="form-control" id="l_name" name="l_name">
+                      <input type="text" class="form-control" id="l_name" placeholder="Enter Your Last Name" name="l_name">
                       @error('l_name')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -106,7 +106,7 @@
                 </div>
                 <div class="form-group">
                   <label class="text-black" for="email">Email address</label>
-                  <input type="email" class="form-control" id="email" name="email">
+                  <input type="email" class="form-control" id="email"  placeholder="Enter Your Email Address" name="email">
                   @error('email')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
@@ -114,7 +114,7 @@
 
                 <div class="form-group mb-5">
                   <label class="text-black" for="message">Message</label>
-                  <textarea name="messge" class="form-control" id="messge"  cols="30" rows="5"></textarea>
+                  <textarea name="messge" class="form-control" id="messge"  placeholder="Enter Your Messge" cols="30" rows="5"></textarea>
                   @error('messge')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror

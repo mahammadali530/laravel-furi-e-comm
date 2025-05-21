@@ -32,7 +32,7 @@ class loginController extends Controller
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:logins,email|max:255', 
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|',
         ]);
        // return $request->input();
        $user = new login;
@@ -79,7 +79,7 @@ class loginController extends Controller
             }
     
             
-            return redirect('/checkout')->with('success', 'Logged in successfully.');
+            return redirect('/cart')->with('success', 'Logged in successfully.');
         }
     
        

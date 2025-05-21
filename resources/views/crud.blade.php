@@ -98,7 +98,7 @@
             </div>
                
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="submit">Add Service</button>
+            <button type="submit" class="btn btn-primary" name="submit">Update Data</button>
         </form>
     </div>
  </div>

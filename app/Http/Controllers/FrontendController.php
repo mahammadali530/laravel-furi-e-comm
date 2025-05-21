@@ -121,7 +121,7 @@ class FrontendController extends Controller
             
             $product = icon::find($productId);
     
-            
+           
         if ($product) {
             $quantity = 1;
             $totalPrice = $product->price * $quantity;
@@ -133,8 +133,8 @@ class FrontendController extends Controller
             $cart->f_name = $product->f_name;
             $cart->price = $product->price;
             $cart->total_price = $totalPrice;
-            $cart->image_1 =$product->image_1;
-       // dd($cart);
+            $cart->image_1 = $product->image_1;
+       
             $cart->save();
                 
                 return redirect('/cart')->with('success', 'Product added to your cart.');
@@ -171,7 +171,7 @@ class FrontendController extends Controller
                 ];
     
                 $cart[] = $cartItem;
-                // dd($cart);
+             
                 
                 $request->session()->put('cart', $cart);
                 
@@ -197,7 +197,7 @@ class FrontendController extends Controller
             return cart::where('user_id', $userId)->count();
         } else {
             $cart = $request->session()->get('cart', []);
-            return count($cart);
+            return response()->json(['count' => 1]);
         }
     }
     
@@ -211,14 +211,13 @@ class FrontendController extends Controller
 
        
         return view('frontend.pages.cart', ['products' => $cart]);
-
     } else {
         
         $cart = $request->session()->get('cart', []);
-
+        
         $products = collect($cart);
-
-     
+        
+      
         return view('frontend.pages.cart', ['products' => $products]);
     }
 }
@@ -307,7 +306,7 @@ public function remove($id, Request $request)
             $order->user_id = $cartItem->user_id;
             $order->quantity = $cartItem->quantity;
             $order->total_price = $cartItem->total_price;
-    
+        
             $order->payment_method = $requests->payment;
             $order->c_fname = $requests->c_fname;
             $order->c_lname = $requests->c_lname;

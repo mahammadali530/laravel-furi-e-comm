@@ -48,7 +48,7 @@
                 <input type="text" class="form-control" id="messge" placeholder="Enter Your Messge" name="messge" >
             </div>   
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="submit">Add Service</button>
+            <button type="submit" class="btn btn-primary" name="submit">UPdate Data</button>
         </form>
     </div>
  </div>

@@ -51,6 +51,7 @@ class ContactController extends Controller
     }
 
 
+    
     public function editContact(Request $request, $id)
     {
     $student = Contact::find($id);

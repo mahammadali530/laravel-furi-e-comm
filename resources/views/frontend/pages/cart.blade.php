@@ -44,11 +44,11 @@ $total= FrontendController::cartitems();
         </thead>
         <tbody>
 @if(session()->has('user'))
-  @php
+    @php
     $to_price = [];
-  @endphp
+    @endphp
 @foreach($products as $product)
-<tr>
+<tr data-cart-id="{{ $product->id }}">
   <td class="product-thumbnail">
       <img src="{{ asset('storage/' . $product->image_1) }}" alt="Image" class="img-fluid">
   </td>
@@ -58,17 +58,17 @@ $total= FrontendController::cartitems();
   <td>₹<span class="product-price">{{ $product->price }}</span></td>
   <td>
       <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
-          <div class="input-group">
-              <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $product->id }}" onclick="decrease({{ $product->id }})">&minus;</button>
-              <input type="text" class="form-control text-center quantity-amount" data-cart-id="{{ $product->id }}" value="{{ $product->quantity }}" />
-              <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $product->id }}" onclick="increase({{ $product->id }})">&plus;</button>
-          </div>
+      <div class="input-group">
+    <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $product->id }}">&minus;</button>
+    <input type="text" class="form-control text-center quantity-amount" data-cart-id="{{ $product->id }}" value="{{ $product->quantity }}" />
+    <button class="btn btn-outline-black increase" type="button" data-cart-id="{{ $product->id }}">&plus;</button>
+</div>
       </div>
   </td>
   <td>₹<span class="item-total">{{ $to_price[] = $product->total_price }}</span></td>
   <td>
       <!-- Correctly pass the cart_id to the route -->
-      <a href="{{ route('remove.cart', ['id' => $product->id]) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">X</a>
+      <a href="{{ route('remove.cart', ['id' => $product->id]) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">❌</a>
   </td>
 </tr>
 @endforeach
@@ -95,7 +95,7 @@ $to_price = [];
     <td>
       
 @if(isset($item['id']) && isset($item['quantity'])) 
-  
+  <div class="cart-item" data-cart-id="{{ $item['id'] }}">
         <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;">
             <div class="input-group">
                 <button class="btn btn-outline-black decrease" type="button" data-cart-id="{{ $item['id'] }}" onclick="decrease_s({{ $item['id'] }})">&minus;</button>
@@ -106,12 +106,13 @@ $to_price = [];
 @endif
             </div>
         </div>
+        </div>
     </td>
     
-    <td>₹<span class="item-total">{{ $to_price[] = $item['price'] * $item['quantity'] }}</span></td>
+    <td>₹<span id="total-price-{{ $item['id'] }}">{{ $to_price[] = $item['price'] * $item['quantity'] }}</span></td>
     <td>
  @if(isset($item['id']))
-        <a href="{{ route('remove.cart', ['id' => $item['id']]) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">X</a>
+        <a href="{{ route('remove.cart', ['id' => $item['id']]) }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">❌</a>
 @else     
      <!-- <span>Cart ID Missing</span> -->
 @endif
@@ -194,9 +195,7 @@ $to_price = [];
                         </div>
                         <div class="col-md-6 text-right">
                         
-    <strong class="text-black">{{ array_sum($to_price) }}</strong>
-
-
+                       <strong class="text-black total-cart-price">₹{{ array_sum($to_price) }}</strong>
 
                           </div>
                       </div>
@@ -218,122 +217,104 @@ $to_price = [];
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
- $(document).ready(function () {
+//  $(document).ready(function () {
     
-  });
-  function updateTotalPrice(id) {
+//   });
+//   function updateTotalPrice(id) {
       
-        var row = $('#cart-item-' + id);
-        var quantity = parseInt(row.find('.quantity-amount').val()) || 0;
-        var price = parseFloat(row.find('.item-price').data('price'));
-        var totalPrice = quantity * price;
+//         var row = $('#cart-item-' + id);
+//         var quantity = parseInt(row.find('.quantity-amount').val()) || 0;
+//         var price = parseFloat(row.find('.item-price').data('price'));
+//         var totalPrice = quantity * price;
 
         
-        row.find('.item-total').text(totalPrice.toFixed(2));  
-    }
-    function increase(id){
-        let input = $(this).siblings('.quantity-amount');
-        let currentVal = parseInt(input.val()) || 0;
-        input.val(currentVal + 1);
-        $.ajax({
-            url: '{{ route("update.increase") }}',
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                id: id,
-            },
-            beforeSend: function () {
-               
-            },
-            success: function (response) {
-                console.log('Response received:', response);
-                if (response.status === 'success') {
-                    //alert('Cart updated successfully!');
-                    location.reload();
-                } else {
-                    alert('Failed to update cart. Message: ' + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error:', { xhr, status, error });
-                alert('An error occurred. Please try again.');
-            }
-        });
-    }
+//         row.find('.item-total').text(totalPrice.toFixed(2));  
+//     }
+$(document).ready(function () {
+  $('.increase, .decrease').click(function () {
+    let button = $(this);
+    let cartId = button.data('cart-id');
+    let inputField = $('input[data-cart-id="' + cartId + '"]');
+    let row = $('tr[data-cart-id="' + cartId + '"]');
 
-   function decrease(id){
-      let input = $(this).siblings('.quantity-amount');
-        let currentVal = parseInt(input.val()) || 0;
-        if (currentVal > 1) input.val(currentVal - 1);
-        $.ajax({
-            url: '{{ route("update.decrease") }}',
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                id: id,
-            },
-            beforeSend: function () {
-               
-            },
-            success: function (response) {
-                console.log('Response received:', response);
-                if (response.status === 'success') {
-                  //  alert('Cart updated successfully!');
-                    location.reload();
-                } else {
-                    alert('Failed to update cart. Message: ' + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error:', { xhr, status, error });
-                alert('An error occurred. Please try again.');
-            }
-        });
-    }
-   
+    let currentQuantity = parseInt(inputField.val()) || 1;
+    let isIncrease = button.hasClass('increase');
+    let newQuantity = isIncrease ? currentQuantity + 1 : currentQuantity - 1;
 
+    if (newQuantity < 1); 
+
+    $.ajax({
+        url: isIncrease ? '{{ route("update.increase") }}' : '{{ route("update.decrease") }}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: cartId,
+        },
+        success: function (response) {
+            if (response.status === 'success') {
+                if (response.removed) {
+                    row.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                } else {
+                    inputField.val(response.newQuantity);
+                    row.find('.item-total').text('' + response.newTotalPrice);
+                }
+                
+                // **Total Cart Price Update**
+                $('.total-cart-price').text('' + response.cart_total);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX Error:', { xhr, status, error });
+            alert('Koi error aayi hai. Kripya dubara koshish karein.');
+        }
+    });
+});
+});
 
     
 </script>
 <script>
-    $(document).ready(function () {
-        function updateCart(id, action) {
-            $.ajax({
-                url: action === 'increase' ? '{{ route("update.increase_ses") }}' : '{{ route("update.decrease_ses") }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: id,
-                },
-                beforeSend: function () {
-                    // Optional: Show a loader or disable buttons
-                },
-                success: function (response) {
-                    console.log('Response received:', response);
-                    if (response.status === 'success') {
-                       // alert('Cart updated successfully!');
-                        location.reload();
+   $(document).ready(function () {
+    function updateCart(id, action) {
+        $.ajax({
+            url: action === 'increase' ? '{{ route("update.increase_ses") }}' : '{{ route("update.decrease_ses") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: id,
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    if (response.removed) {
+                       
+                        $('.cart-item[data-cart-id="' + id + '"]').remove();
                     } else {
-                        alert('Failed to update cart. Message: ' + response.message);
+                        $('.quantity-amount[data-cart-id="' + id + '"]').val(response.quantity);
+                        $('#total-price-' + id).text('' + response.total_price);
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX Error:', { xhr, status, error });
-                    alert('An error occurred. Please try again.');
+                    $('.total-cart-price').text('' + response.cart_total);
+                } else {
+                    alert('Failed to update cart.');
                 }
-            });
-        }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', { xhr, status, error });
+                alert('An error occurred. Please try again.');
+            }
+        });
+    }
 
-        window.increase_s = function (id) {
-            updateCart(id, 'increase');
-        };
+    window.increase_s = function (id) {
+        updateCart(id, 'increase');
+    };
 
-        window.decrease_s = function (id) {
-            updateCart(id, 'decrease');
-        };
-    });
+    window.decrease_s = function (id) {
+        updateCart(id, 'decrease');
+    };
+});
+
 </script>
 
-
-
-          @include('frontend.partials.footer')
+   @include('frontend.partials.footer')

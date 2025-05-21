@@ -37,8 +37,15 @@ $total= FrontendController::cartitems();
 
 					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
 						<!-- <li><a class="nav-link" href="login"><img src="{{ asset('asset/images/user.svg') }}"></a></li> -->
-						<li><a class="nav-link" href="{{ url('/cart') }}"><img src="{{ asset('asset/images/cart.svg') }}">
-						{{$total}}</a></li>
+						<li>
+						<a class="nav-link" href="{{ url('/cart') }}"><img src="{{ asset('asset/images/cart.svg') }}">
+						@if(session()->has('cart') && count(session('cart')) > 0)
+                		{{ count(session('cart')) }}
+						@else
+						{{$total}}
+						@endif
+						</a>
+					</li>
 					</ul>
 					@if(Session::has('user'))
         <li class="nav-item dropdown">

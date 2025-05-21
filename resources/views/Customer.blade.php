@@ -12,13 +12,77 @@
         </ol>
       </nav>
     </div><!-- End Page Title -->
+<style>
+    label {
+            margin-left:30px;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            /* margin: 10px 0 5px; */
+        }
 
+        input[type="date"] {
+            width: 21%;
+            padding: 8px;
+            font-size: 14px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .redy {
+            margin-top: 15px;
+            margin-left: 30px;
+            padding: 10px 20px;
+            font-weight: bold; 
+             width: 90px; 
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .redy2 {
+            text-decoration: none;
+            margin-top: 15px;
+            margin-left: 30px;
+            padding: 10px 30px;
+             width: 90px; 
+             font-weight: bold; 
+            background-color:rgb(100, 29, 186);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+        
+
+   
+</style>
     <section class="section">
 <div  class="row">
   <div class="col-lg-12">
-
+  
     <div style=" overflow-y:auto;"class="card">
+    <form  action="/filter" method="GET">
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" required>
+            
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date" required>
+
+            <button class="redy" type="submit">Filter</button>
+                <a class="redy2"  href="{{ route('export.csv', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success">
+        Export
+    </a>
+        </form>
       <div class="card-body">
+      
        <div class="modal fade" id="editmodal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -63,15 +127,15 @@
                 <input type="text" class="form-control" id="c_phone" placeholder="Enter Your phone" name="c_phone" >
             </div>     
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="submit">Add Service</button>
+            <button type="submit" class="btn btn-primary" name="submit">Update Data</button>
         </form>
     </div>
  </div>
 </div>
 </div>
-<table class="  table table-bordered">
+<table class="  table datatable">
         <thead>
-          <tr class=" table table-dark">
+          <tr>
             <th>id</th>
             <th>product_id</th>
             <th>user_id</th>
@@ -89,7 +153,7 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody class="table-info">
+        <tbody>
         @foreach ($orders as $items)
         <tr>
             <td>{{ $items->id }}</td>
